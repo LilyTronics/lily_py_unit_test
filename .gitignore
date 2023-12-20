@@ -6,3 +6,7 @@
 
 # Test reports
 **/lily_unit_test_reports/*
+
+# Distribution output
+/dist/*
+/src/lily_unit_test.egg-info/*
