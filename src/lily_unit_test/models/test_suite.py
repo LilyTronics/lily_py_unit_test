@@ -78,7 +78,7 @@ class TestSuite(object):
     # Override these when needed #
     ##############################
 
-    def setup(self): pass
+    def setup(self): return True
     def teardown(self): pass
 
 
