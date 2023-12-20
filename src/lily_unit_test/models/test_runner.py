@@ -6,8 +6,10 @@ Runs all test suites from a specific package folder (recursive)
 import inspect
 import os
 import sys
+import webbrowser
 
 from datetime import datetime
+from lily_unit_test.models.html_report import generate_html_report
 from lily_unit_test.models.logger import Logger
 from lily_unit_test.models.test_suite import TestSuite
 
@@ -55,16 +57,24 @@ class TestRunner(object):
     ##########
 
     @classmethod
-    def run(cls, test_suites_path):
-        test_suites_path = os.path.abspath(test_suites_path)
-        report_path = os.path.join(os.path.dirname(test_suites_path), cls.REPORT_FOLDER)
+    def run(cls, test_suites_path, options=None):
+        if options is None:
+            options = {}
 
+        test_suites_path = os.path.abspath(test_suites_path)
+
+        report_path = options.get(
+            'report_folder',
+            os.path.join(os.path.dirname(test_suites_path), cls.REPORT_FOLDER)
+        )
+
+        report_data = {}
         test_runner_log = Logger(False)
         time_stamp = datetime.now().strftime(cls.REPORT_TIME_STAMP_FORMAT)
         test_suites = cls._populate_test_suites(test_suites_path)
         n_test_suites = len(test_suites)
         n_digits = len(str(n_test_suites))
-        report_name_format = '{{:0{}d}}_{{}}.txt'.format(n_digits)
+        report_name_format = '{{:0{}d}}_{{}}'.format(n_digits)
         if n_test_suites > 0:
             n_test_suites_passed = 0
             test_runner_log.info('Run {} test suites from folder: {}'.format(n_test_suites, test_suites_path))
@@ -81,8 +91,9 @@ class TestRunner(object):
                 else:
                     test_runner_log.error('Test suite {}: FAILED'.format(test_suite_name))
 
-                cls._write_log_messages_to_file(report_path, time_stamp,
-                                                report_name_format.format(i + 2, test_suite_name), ts.log)
+                report_id = report_name_format.format(i + 2, test_suite_name)
+                report_data[report_id] = ts.log.get_log_messages()
+                cls._write_log_messages_to_file(report_path, time_stamp, '{}.txt'.format(report_id), ts.log)
 
             test_runner_log.empty_line()
             ratio = 100 * n_test_suites_passed / n_test_suites
@@ -97,12 +108,31 @@ class TestRunner(object):
             test_runner_log.info('No test suites found in folder: {}'.format(test_suites_path))
 
         test_runner_log.shutdown()
-        cls._write_log_messages_to_file(report_path, time_stamp, report_name_format.format(1, 'TestRunner'),
-                                        test_runner_log)
+
+        report_id = report_name_format.format(1, 'TestRunner')
+        report_data[report_id] = test_runner_log.get_log_messages()
+        cls._write_log_messages_to_file(report_path, time_stamp, '{}.txt'.format(report_id), test_runner_log)
+
+        if options.get('create_html_report', False):
+            html_output = generate_html_report(report_data)
+            filename = os.path.join(report_path, '{}_TestRunner.html'.format(time_stamp))
+            with open(filename, 'w') as fp:
+                fp.write(html_output)
+
+            if options.get('open_in_browser', False):
+                webbrowser.open(filename)
 
 
 if __name__ == '__main__':
 
     from lily_unit_test import test_classes
 
-    TestRunner.run(os.path.dirname(test_classes.__file__))
+    test_options = {
+        # 'report_folder': os.path.join(os.path.expanduser('~'), TestRunner.REPORT_FOLDER),
+        'create_html_report': True,
+        'open_in_browser': True,
+        # 'include_test_suites': ['TestSuite01', 'TestSuite02'],
+        # 'exclude_test_suites': ['TestSuite03', 'TestSuite04'],
+    }
+
+    TestRunner.run(os.path.dirname(test_classes.__file__), test_options)
