@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+html {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+header {
+    padding: 8px;
+    background-color: #666;
+    color: #fff;
+    font-size: 1.5em;
+}
+
+div {
+    padding: 8px;
+}
+
+span {
+    padding: 2px 4px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    padding: 0px 4px;
+}
+
+pre {
+    margin: 0px;
+    padding: 0px;
+    white-space: pre-wrap;
+}
+
+.expand {
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #ccc;
+    font-weight: bold;
+}
+
+div.test-suite {
+    margin-top: 4px;
+    border: 1px solid #666;
+}
+
+div.log-messages {
+    padding: 0px;
+    border-left: 1px solid #666;
+    border-right: 1px solid #666;
+}
+
+.failed {
+    background-color: #f66;
+}
+
+.passed {
+    background-color: #0c0;
+}
+
+div.log {
+    padding: 4px;
+    border-bottom: 1px solid #666;
+}
+
+.info {
+    background-color: #9cf;
+}
+
+.debug {
+    background-color: #ddd;
+}
+
+.error {
+    background-color: #f90;
+}
+
+.stdout {
+    background-color: #ddd;
+}
+
+.stderr {
+    background-color: #f90;
+}
+</style>
+<script>
+'use strict';
+
+function show_log(test_id) {
+    let current_symbol = document.getElementById('button_' + test_id).innerHTML;
+    let elms = document.getElementsByClassName('log-messages');
+
+    // Hide all logs
+    for (let i = 0; i < elms.length; i++) {
+        elms[i].style.display = 'none';
+        let button_id = elms[i].id.replace('log_', 'button_');
+        document.getElementById(button_id).innerHTML = '&plus;';
+    }
+    // Show requested log
+    if (current_symbol == '+') {
+        document.getElementById('button_' + test_id).innerHTML = '&minus;';
+        document.getElementById('log_' + test_id).style.display = 'block';
+    }
+}
+</script>
+<title>$start_date Test Run $result</title>
+</head>
+<body>
+<header>
+$start_date - Test run: $result
+</header>
+<div>
+<p>$start_message</p>
+<table>
+<tr><td>Start:</td><td>$start_date</td></tr>
+<tr><td>End:</td><td>$end_date</td></tr>
+<tr><td>Duration:</td><td>$duration</td></tr>
+<tr><td>Result:</td><td><span class="$result_class">$result</span> $result_message</td></tr>
+</table>
+</div>
+
+<div>
+$test_suites_results
+</div>
+
+<p>&nbsp;</p>
+</body>
+</html>
