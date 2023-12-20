@@ -25,7 +25,9 @@ class TestSuite(object):
                 setup_result = self.setup()
                 if setup_result is not None and not setup_result:
                     self.log.error('Test suite {}: FAILED: setup failed'.format(test_suite_name))
-                setup_result = True
+                    setup_result = False
+                else:
+                    setup_result = True
             except Exception as e:
                 self.log.error('Test suite {}: FAILED by exception in setup\nException: {}'.format(test_suite_name, e))
                 setup_result = False
