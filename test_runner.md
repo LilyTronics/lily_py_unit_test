@@ -78,6 +78,9 @@ The test runner has the following options.
         # Creates a single HTML file with all the results
         # See example in: examples/example_report.html
         'create_html_report': True,
+        
+        # Open the HTML report in the default browser 
+        'open_in_browser': True,
 
         # Run only the test suites in this list, skip others
         'include_test_suites': [
