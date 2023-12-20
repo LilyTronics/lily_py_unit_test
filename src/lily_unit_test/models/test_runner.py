@@ -67,7 +67,7 @@ class TestRunner(object):
             'report_folder',
             os.path.join(os.path.dirname(test_suites_path), cls.REPORT_FOLDER)
         )
-        write_log_files = not options.get('no_log_files', False);
+        write_log_files = not options.get('no_log_files', False)
 
         report_data = {}
         test_runner_log = Logger(False)
