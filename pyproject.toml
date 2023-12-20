@@ -1,0 +1,18 @@
+[project]
+name = "lily_unit_test"
+version = "0.9.1"
+authors = [
+  { name = "LilyTronics", email="info@lilytronics.nl" },
+]
+description = "Python Unit Test package"
+readme = "readme.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/LilyTronics/lily-py-unit-test"
+Issues = "https://github.com/LilyTronics/lily-py-unit-test/issues"
