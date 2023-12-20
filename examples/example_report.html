@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+html {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+header {
+    padding: 8px;
+    background-color: #666;
+    color: #fff;
+    font-size: 1.5em;
+}
+
+div {
+    padding: 8px;
+}
+
+span {
+    padding: 2px 4px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    padding: 0px 4px;
+}
+
+pre {
+    margin: 0px;
+    padding: 0px;
+    white-space: pre-wrap;
+}
+
+.expand {
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #ccc;
+    font-weight: bold;
+}
+
+div.test-suite {
+    margin-top: 4px;
+    border: 1px solid #666;
+}
+
+div.log-messages {
+    padding: 0px;
+    border-left: 1px solid #666;
+    border-right: 1px solid #666;
+}
+
+.failed {
+    background-color: #f66;
+}
+
+.passed {
+    background-color: #0c0;
+}
+
+div.log {
+    padding: 4px;
+    border-bottom: 1px solid #666;
+}
+
+.info {
+    background-color: #9cf;
+}
+
+.debug {
+    background-color: #ddd;
+}
+
+.error {
+    background-color: #f90;
+}
+
+.stdout {
+    background-color: #ddd;
+}
+
+.stderr {
+    background-color: #f90;
+}
+</style>
+<script>
+'use strict';
+
+function show_log(test_id) {
+    let current_symbol = document.getElementById('button_' + test_id).innerHTML;
+    let elms = document.getElementsByClassName('log-messages');
+
+    // Hide all logs
+    for (let i = 0; i < elms.length; i++) {
+        elms[i].style.display = 'none';
+        let button_id = elms[i].id.replace('log_', 'button_');
+        document.getElementById(button_id).innerHTML = '&plus;';
+    }
+    // Show requested log
+    if (current_symbol == '+') {
+        document.getElementById('button_' + test_id).innerHTML = '&minus;';
+        document.getElementById('log_' + test_id).style.display = 'block';
+    }
+}
+</script>
+<title>2023-12-20 15:42:08 Test Run FAILED</title>
+</head>
+<body>
+<header>
+2023-12-20 15:42:08 - Test run: FAILED
+</header>
+<div>
+<p>Run 6 test suites from folder: .\lily_unit_test\test_classes</p>
+<table>
+<tr><td>Start:</td><td>2023-12-20 15:42:08</td></tr>
+<tr><td>End:</td><td>2023-12-20 15:42:08</td></tr>
+<tr><td>Duration:</td><td>0:00:00</td></tr>
+<tr><td>Result:</td><td><span class="failed">FAILED</span> 1 of 6 test suites passed (16.7%)</td></tr>
+</table>
+</div>
+
+<div>
+<div class ="test-suite failed"><span class="expand" title="Show/hide log messages" id="button_2_TestClassEmpty" onclick="show_log('2_TestClassEmpty')">&plus;</span> TestClassEmpty: FAILED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_2_TestClassEmpty">
+<div class="log info"><pre>2023-12-20 15:42:08.247 | INFO   | Run test suite: TestClassEmpty</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test suite TestClassEmpty: FAILED by exception</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Exception: No tests defined</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test suite TestClassEmpty: FAILED</pre></div>
+</div><div class ="test-suite failed"><span class="expand" title="Show/hide log messages" id="button_3_TestClassFail" onclick="show_log('3_TestClassFail')">&plus;</span> TestClassFail: FAILED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_3_TestClassFail">
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Run test suite: TestClassFail</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Run test case: TestClassFail.test_01_fail_by_return_false</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test case TestClassFail.test_01_fail_by_return_false: FAILED</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Run test case: TestClassFail.test_02_fail_by_exception</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test case TestClassFail.test_02_fail_by_exception: FAILED by exception</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Exception: division by zero</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Test suite TestClassFail: 0 of 2 test cases passed (0.0%)</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test suite TestClassFail: FAILED</pre></div>
+</div><div class ="test-suite failed"><span class="expand" title="Show/hide log messages" id="button_4_TestClassSetupFailException" onclick="show_log('4_TestClassSetupFailException')">&plus;</span> TestClassSetupFailException: FAILED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_4_TestClassSetupFailException">
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Run test suite: TestClassSetupFailException</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test suite TestClassSetupFailException: FAILED by exception in setup</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Exception: division by zero</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test suite TestClassSetupFailException: FAILED</pre></div>
+</div><div class ="test-suite failed"><span class="expand" title="Show/hide log messages" id="button_5_TestClassSetupFailReturnFalse" onclick="show_log('5_TestClassSetupFailReturnFalse')">&plus;</span> TestClassSetupFailReturnFalse: FAILED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_5_TestClassSetupFailReturnFalse">
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Run test suite: TestClassSetupFailReturnFalse</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test suite TestClassSetupFailReturnFalse: FAILED: setup failed</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test suite TestClassSetupFailReturnFalse: FAILED</pre></div>
+</div><div class ="test-suite failed"><span class="expand" title="Show/hide log messages" id="button_6_TestClassTeardownFailException" onclick="show_log('6_TestClassTeardownFailException')">&plus;</span> TestClassTeardownFailException: FAILED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_6_TestClassTeardownFailException">
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Run test suite: TestClassTeardownFailException</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Run test case: TestClassTeardownFailException.test_dummy</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Test case TestClassTeardownFailException.test_dummy: PASSED</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Test suite TestClassTeardownFailException: 1 of 1 test cases passed (100.0%)</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test suite TestClassTeardownFailException: FAILED by exception in teardown</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Exception: division by zero</pre></div>
+<div class="log error"><pre>2023-12-20 15:42:08.248 | ERROR  | Test suite TestClassTeardownFailException: FAILED</pre></div>
+</div><div class ="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_7_TestClassPass" onclick="show_log('7_TestClassPass')">&plus;</span> TestClassPass: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_7_TestClassPass">
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Run test suite: TestClassPass</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Run test case: TestClassPass.test_01_pass_by_return_none</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Test case TestClassPass.test_01_pass_by_return_none: PASSED</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Run test case: TestClassPass.test_02_pass_by_return_true</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Test case TestClassPass.test_02_pass_by_return_true: PASSED</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Test suite TestClassPass: 2 of 2 test cases passed (100.0%)</pre></div>
+<div class="log info"><pre>2023-12-20 15:42:08.248 | INFO   | Test suite TestClassPass: PASSED</pre></div>
+</div>
+</div>
+
+<p>&nbsp;</p>
+</body>
+</html>
