@@ -72,7 +72,17 @@ class TestRunner(object):
         report_data = {}
         test_runner_log = Logger(False)
         time_stamp = datetime.now().strftime(cls.REPORT_TIME_STAMP_FORMAT)
+
         test_suites = cls._populate_test_suites(test_suites_path)
+
+        include_filter = options.get('include_test_suites', [])
+        if len(include_filter) > 0:
+            test_suites = list(filter(lambda x: x.__name__ in include_filter, test_suites))
+
+        exclude_filter = options.get('exclude_test_suites', [])
+        if len(exclude_filter) > 0:
+            test_suites = list(filter(lambda x: x.__name__ not in exclude_filter, test_suites))
+
         n_test_suites = len(test_suites)
         n_digits = len(str(n_test_suites))
         report_name_format = '{{:0{}d}}_{{}}'.format(n_digits)
@@ -135,8 +145,8 @@ if __name__ == '__main__':
         'create_html_report': True,
         'open_in_browser': True,
         'no_log_files': True,
-        # 'include_test_suites': ['TestSuite01', 'TestSuite02'],
-        # 'exclude_test_suites': ['TestSuite03', 'TestSuite04'],
+        # 'include_test_suites': ['TestClassEmpty', 'TestClassPass'],
+        # 'exclude_test_suites': ['TestClassSetupFailException', 'TestClassTeardownFailException'],
     }
 
     TestRunner.run(os.path.dirname(test_classes.__file__), test_options)
