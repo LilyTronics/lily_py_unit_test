@@ -90,5 +90,19 @@ Using the test suite as an object:
         # for message in ts.log.get_log_messages():
         #     fp.write('{}\n'.format(message))
 
+See test_suite.md for more details
+
+
+## Test runner
+
+A test runner is an object to run test suites from a specific folder recursive.
+
+    from lily_unit_test import TestRunner
+
+    TestRunner.run('path/to/test_suites')
+
+See test_runner.md for more details
+
+
 (c) 2023 - LilyTronics (https://lilytronics.nl)
 
