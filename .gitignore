@@ -3,3 +3,6 @@
 
 # Pycharm project
 /.idea/*
+
+# Test reports
+**/lily_unit_test_reports/*
