@@ -7,8 +7,8 @@ from lily_unit_test.models.logger import Logger
 
 class TestSuite(object):
 
-    def __init__(self, logger=None):
-        self.log = Logger() if logger is None else logger
+    def __init__(self):
+        self.log = Logger()
 
     def run(self):
         test_suite_name = self.__class__.__name__
@@ -57,7 +57,8 @@ class TestSuite(object):
             try:
                 self.teardown()
             except Exception as e:
-                self.log.error('Test suite {}: FAILED by exception in teardown\nException: {}'.format(test_suite_name, e))
+                self.log.error('Test suite {}: FAILED by exception in teardown\nException: {}'.format(
+                               test_suite_name, e))
                 test_suite_result = False
 
         except Exception as e:
