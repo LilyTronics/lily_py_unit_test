@@ -1,6 +1,6 @@
 [project]
 name = "lily_unit_test"
-version = "0.9.1"
+version = "1.0.0"
 authors = [
   { name = "LilyTronics", email="info@lilytronics.nl" },
 ]

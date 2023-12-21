@@ -4,7 +4,7 @@ Unit test package for adding unit tests to your project.
 
 ### Release history:
 
-* 202312: V0.9.1 released
+* 202312: V1.0.0 official release
 
 
 ## Installation
