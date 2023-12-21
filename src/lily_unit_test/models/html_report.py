@@ -2,6 +2,8 @@
 Generate HTML report.
 """
 
+import os
+
 from datetime import datetime
 from string import Template
 from lily_unit_test.models.logger import Logger
@@ -43,7 +45,8 @@ def generate_html_report(report_data):
     end = datetime.strptime(test_runner_end, time_format)
     test_runner_duration = end - start
 
-    with open('artifacts\\html_report_template.html', 'r') as fp:
+    template_filename = os.path.join(os.path.dirname(__file__), 'artifacts', 'html_report_template.html')
+    with open(template_filename, 'r') as fp:
         template = fp.read()
 
     output = Template(template).substitute({
