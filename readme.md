@@ -4,6 +4,7 @@ Unit test package for adding unit tests to your project.
 
 ### Release history:
 
+* 202312: V1.1.0 fix issue with writing HTML report if path does not exist 
 * 202312: V1.0.0 official release
 
 
