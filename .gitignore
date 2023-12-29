@@ -13,3 +13,6 @@
 # Distribution output
 /dist/*
 /src/lily_unit_test.egg-info/*
+
+# Twine config file (contains a token and must not be stored in the repo)
+/twine.conf
