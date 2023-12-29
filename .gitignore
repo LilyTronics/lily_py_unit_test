@@ -4,6 +4,9 @@
 # Pycharm project
 /.idea/*
 
+# Virtual pyhton environment
+/venv/*
+
 # Test reports
 **/lily_unit_test_reports/*
 
