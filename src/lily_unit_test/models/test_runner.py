@@ -129,6 +129,8 @@ class TestRunner(object):
         if options.get('create_html_report', False):
             html_output = generate_html_report(report_data)
             filename = os.path.join(report_path, '{}_TestRunner.html'.format(time_stamp))
+            if not os.path.isdir(report_path):
+                os.makedirs(report_path)
             with open(filename, 'w') as fp:
                 fp.write(html_output)
 
