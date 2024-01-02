@@ -58,6 +58,8 @@ class TestRunner(object):
 
     @classmethod
     def run(cls, test_suites_path, options=None):
+        test_run_result = False
+
         if options is None:
             options = {}
 
@@ -113,6 +115,7 @@ class TestRunner(object):
                                  n_test_suites_passed, n_test_suites, ratio))
             if n_test_suites == n_test_suites_passed:
                 test_runner_log.info('Test runner result: PASSED')
+                test_run_result = True
             else:
                 test_runner_log.error('Test runner result: FAILED')
 
@@ -137,6 +140,8 @@ class TestRunner(object):
             if options.get('open_in_browser', False):
                 webbrowser.open(filename)
 
+        return test_run_result
+
 
 if __name__ == '__main__':
 
@@ -151,4 +156,5 @@ if __name__ == '__main__':
         # 'exclude_test_suites': ['TestClassSetupFailException', 'TestClassTeardownFailException'],
     }
 
-    TestRunner.run(os.path.dirname(test_classes.__file__), test_options)
+    test_result = TestRunner.run(os.path.dirname(test_classes.__file__), test_options)
+    print('Test runner result:', test_result)
