@@ -5,7 +5,7 @@
 /.idea/*
 
 # Virtual pyhton environment
-/venv/*
+/.venv/*
 
 # Test reports
 **/lily_unit_test_reports/*
