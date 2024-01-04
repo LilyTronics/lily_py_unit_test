@@ -97,7 +97,7 @@ These test methods are executed by the test suite run method.
 Preceding the test cases, an optional setup method is executed.
 If the setup fails, execution is stopped.
 Following the test cases a teardown method will be executed,
-regardless whether the test cases are passed or failed.
+regardless whether the test cases passed or failed.
 
 
 ## Test suite creation
