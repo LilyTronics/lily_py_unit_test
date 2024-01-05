@@ -254,7 +254,7 @@ class MyTestSuite(lily_unit_test.TestSuite):
     CLASSIFICATION = <value>
 ```
 
-The values are defined in a object called `Classification` and can be imported from the package.
+The values are defined in an object called `Classification` and can be imported from the package.
 
 ```python
 import lily_unit_test
