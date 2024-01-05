@@ -107,7 +107,7 @@ class TestSuite(object):
             raise Exception(error_message)
         return False
 
-    def fail_if(self, expression, error_message='', raise_exception=True):
+    def fail_if(self, expression, error_message, raise_exception=True):
         if expression:
             self.fail(error_message, raise_exception)
 
