@@ -30,6 +30,7 @@ class TestRunner(object):
         test_suites = []
         for current_folder, sub_folders, filenames in os.walk(test_suites_path):
             sub_folders.sort()
+            filenames.sort()
             for filename in filter(lambda x: x.endswith('.py'), filenames):
                 import_path = os.path.join(current_folder[len(test_suites_path) + 1:], filename.replace('.py', ''))
                 import_path = import_path.replace(os.sep, '.')

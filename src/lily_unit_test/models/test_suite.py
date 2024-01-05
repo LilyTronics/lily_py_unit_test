@@ -19,7 +19,7 @@ class TestSuite(object):
 
         test_suite_result = False
         try:
-            test_methods = sorted(list(filter(lambda x: x.startswith('test_'), dir(self))))
+            test_methods = list(filter(lambda x: x.startswith('test_'), list(vars(self.__class__).keys())))
             n_tests = len(test_methods)
             assert n_tests > 0, 'No tests defined'
 

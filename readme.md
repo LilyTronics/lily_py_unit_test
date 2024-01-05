@@ -135,20 +135,7 @@ class MyTestSuite(lily_unit_test.TestSuite):
 ```
 
 In this case two test cases are defined.
-Note that test case methods are executed in alphabetical order.
-In case order is important, you can use numbers in your test case methods:
-
-```python
-import lily_unit_test
-
-class MyTestSuite(lily_unit_test.TestSuite):
-    
-    def test_01_login(self):
-        ...
-    
-    def test_02_upload_image(self):
-        ...
-```
+The tests are executed in the order as they are created, from top to bottom.
 
 ## Using setup and teardown
 
@@ -367,7 +354,9 @@ This means all 4 python modules are checked for test suites.
 The test runner imports each module and checks if the module contains a class that is
 based on the test suite base class (`class MyTestSuite(lily_unit_test.TestSuite)`).
 
-The test runner will run all the test suites and will write report files to a folder:
+All test suites are executed in alphabetical order.
+If a specific order is required, use numbers in the file and folder names to sort them.
+The test runner will run all the test suites and will write report files to a folder.
 The output folder will look like this:
 
 ```
