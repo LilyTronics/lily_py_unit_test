@@ -97,6 +97,22 @@ class TestSuite(object):
     def setup(self): return True
     def teardown(self): pass
 
+    ################
+    # Test methods #
+    ################
+
+    def fail(self, error_message, raise_exception=True):
+        self.log.error(error_message)
+        if raise_exception:
+            raise Exception(error_message)
+        return False
+
+    def fail_if(self, expression, error_message='', raise_exception=True):
+        if expression:
+            self.fail(error_message, raise_exception)
+
+        return not expression
+
 
 if __name__ == '__main__':
 
