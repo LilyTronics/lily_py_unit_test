@@ -74,13 +74,13 @@ Run the file: `python -m my_class.py`
 The output should look like:
 
 ```
-2023-12-20 09:28:46.105 | INFO   | Run test suite: MyTestSuite
-2023-12-20 09:28:46.105 | INFO   | Run test case: MyTestSuite.test_add_one
-2023-12-20 09:28:46.106 | INFO   | Test case MyTestSuite.test_add_one: PASSED
-2023-12-20 09:28:46.106 | INFO   | Run test case: MyTestSuite.test_add_two
-2023-12-20 09:28:46.106 | INFO   | Test case MyTestSuite.test_add_two: PASSED
-2023-12-20 09:28:46.106 | INFO   | Test suite MyTestSuite: 2 of 2 test cases passed (100.0%)
-2023-12-20 09:28:46.106 | INFO   | Test suite MyTestSuite: PASSED
+2023-12-20 19:28:46.105 | INFO   | Run test suite: MyTestSuite
+2023-12-20 19:28:46.105 | INFO   | Run test case: MyTestSuite.test_add_one
+2023-12-20 19:28:46.106 | INFO   | Test case MyTestSuite.test_add_one: PASSED
+2023-12-20 19:28:46.106 | INFO   | Run test case: MyTestSuite.test_add_two
+2023-12-20 19:28:46.106 | INFO   | Test case MyTestSuite.test_add_two: PASSED
+2023-12-20 19:28:46.106 | INFO   | Test suite MyTestSuite: 2 of 2 test cases passed (100.0%)
+2023-12-20 19:28:46.106 | INFO   | Test suite MyTestSuite: PASSED
 ```
 
 ## Test runner
@@ -251,6 +251,65 @@ ts.run()
 # get log messages
 log_messages = ts.log.get_log_messages()
 ```
+
+## Classification
+
+The test suite object has a build in classification.
+This can be set by the `CLASSIFICATION` attribute.
+
+```python
+import lily_unit_test
+
+class MyTestSuite(lily_unit_test.TestSuite):
+    
+    CLASSIFICATION = <value>
+```
+
+The values are defined in a object called `Classification` and can be imported from the package.
+
+```python
+import lily_unit_test
+
+# Regular test suite
+class MyTestSuite01(lily_unit_test.TestSuite):
+    
+    # By default the value is PASS, so this is not necessary 
+    CLASSIFICATION = lily_unit_test.Classification.PASS
+
+
+# Test suite that we expect to fail
+class MyTestSuite02(lily_unit_test.TestSuite):
+    
+    # Override the default value
+    CLASSIFICATION = lily_unit_test.Classification.FAIL
+```
+
+The default value is `PASS`, and is usually suitable for most test suites.
+This means in general there is no need to override this attribute.
+Setting this attribute to `FAIL` will make the test suite pass in case of a failure.
+All errors are logged as usual but the end result will be passed in case of a failure.
+If the test suite passes, the test suite is marked as failed.
+
+This situation is useful when the test fails because of a known issue,
+and you want to accept the known issue. As long as the issue is there the test will pass.
+When the issue is solved, the test fails, reminding you to restore the classification attribute.
+
+The log messages will show this:
+
+```
+- No classification defined:
+2024-01-05 19:35:54.328 | ERROR  | Test classification is not defined: None
+2024-01-05 19:35:54.328 | ERROR  | Test suite TestSuiteClassification: FAILED
+
+- Classification set to FAIL and test suite fails because of a known issue, but is accepted
+2024-01-05 19:38:17.989 | INFO   | Test suite failed, but accepted because classification is set to FAIL
+2024-01-05 19:38:17.989 | INFO   | Test suite TestSuiteClassification: PASSED
+
+- Classification set to FAIL and test suite passes because of the known issue is solved
+2024-01-05 19:39:46.530 | ERROR  | Test suite passed, but a failure was expected because classification is set to FAIL
+2024-01-05 19:39:46.530 | ERROR  | Test suite TestSuiteClassification: FAILED
+```
+
 
 # Test runner object
 

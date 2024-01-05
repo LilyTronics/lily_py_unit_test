@@ -2,10 +2,13 @@
 Test suite class.
 """
 
+from lily_unit_test.models.classification import Classification
 from lily_unit_test.models.logger import Logger
 
 
 class TestSuite(object):
+
+    CLASSIFICATION = Classification.PASS
 
     def __init__(self):
         self.log = Logger()
@@ -65,6 +68,17 @@ class TestSuite(object):
 
         except Exception as e:
             self.log.error('Test suite {}: FAILED by exception\nException: {}'.format(test_suite_name, e))
+            test_suite_result = False
+
+        if self.CLASSIFICATION == Classification.FAIL:
+            # We expect a failure
+            test_suite_result = not test_suite_result
+            if test_suite_result:
+                self.log.info('Test suite failed, but accepted because classification is set to FAIL')
+            else:
+                self.log.error('Test suite passed, but a failure was expected because classification is set to FAIL')
+        elif self.CLASSIFICATION != Classification.PASS:
+            self.log.error('Test classification is not defined: {}'.format(self.CLASSIFICATION))
             test_suite_result = False
 
         if test_suite_result:

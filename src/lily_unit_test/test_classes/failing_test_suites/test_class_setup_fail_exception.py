@@ -2,10 +2,13 @@
 Test class for use with the unit test.
 """
 
+from lily_unit_test.models.classification import Classification
 from lily_unit_test.models.test_suite import TestSuite
 
 
 class TestClassSetupFailException(TestSuite):
+
+    CLASSIFICATION = Classification.FAIL
 
     def setup(self):
         _a = 1 / 0
