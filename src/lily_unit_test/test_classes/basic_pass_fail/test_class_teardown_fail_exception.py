@@ -1,5 +1,5 @@
 """
-Test class for use with the unit test.
+Test class for testing a failing teardown because of an exception.
 """
 
 from lily_unit_test.models.classification import Classification

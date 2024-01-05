@@ -1,5 +1,5 @@
 """
-Test class for use with the unit test.
+Test class for testing passing tests.
 """
 
 from lily_unit_test.models.test_suite import TestSuite
