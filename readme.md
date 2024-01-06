@@ -6,6 +6,8 @@ Unit test package for adding unit tests to your project.
 
 This list shows the most recent releases:
 
+* 202301: V1.5.0
+  * test suite has an option to log traceback in case of an exception
 * 202301: V1.4.0
   * test suite has fail methods for making tests fail
   * test methods are now executed in the order they are created (not alphabetical)
