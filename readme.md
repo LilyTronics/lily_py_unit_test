@@ -427,6 +427,15 @@ The log messages will show this:
 
 The test suite has some test methods that might be useful to use.
 
+* **run( *log_traceback=False* ):**
+  
+  Runs the test suite. The test suite is run as follows:
+  * First, the setup method is run. If the setup fails, the test suite stops running.
+  * Second, all test methods are run (methods starting with `test_`).
+  * Finally, the teardown is run.
+  
+  In case of an exception, extra traceback information can be logged by setting the `log_traceback` parameter to True.
+
 * **fail( *error_message*, *raise_exception=True* ):**
   
   Logs an error message and raises an exception. By default, an exception is raised.
