@@ -6,6 +6,9 @@ Unit test package for adding unit tests to your project.
 
 This list shows the most recent releases:
 
+* 202301: V1.4.0
+  * test suite has fail methods for making tests fail
+  * test methods are now executed in the order they are created (not alphabetical)
 * 202301: V1.3.0
   * test runner can have a classification for handling known issues.
 * 202301: V1.2.0
