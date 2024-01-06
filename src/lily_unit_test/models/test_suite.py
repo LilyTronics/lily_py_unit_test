@@ -2,6 +2,8 @@
 Test suite class.
 """
 
+import traceback
+
 from lily_unit_test.models.classification import Classification
 from lily_unit_test.models.logger import Logger
 
@@ -13,7 +15,7 @@ class TestSuite(object):
     def __init__(self):
         self.log = Logger()
 
-    def run(self):
+    def run(self, log_traceback=False):
         test_suite_name = self.__class__.__name__
         self.log.info('Run test suite: {}'.format(test_suite_name))
 
@@ -33,6 +35,8 @@ class TestSuite(object):
                     setup_result = True
             except Exception as e:
                 self.log.error('Test suite {}: FAILED by exception in setup\nException: {}'.format(test_suite_name, e))
+                if log_traceback:
+                    self.log.error(traceback.format_exc().strip())
                 setup_result = False
 
             if setup_result:
@@ -51,6 +55,8 @@ class TestSuite(object):
 
                     except Exception as e:
                         self.log.error('Test case {}: FAILED by exception\nException: {}'.format(test_case_name, e))
+                        if log_traceback:
+                            self.log.error(traceback.format_exc().strip())
 
                 ratio = 100 * n_passed / n_tests
                 self.log.info('Test suite {}: {} of {} test cases passed ({:.1f}%)'.format(
@@ -68,6 +74,8 @@ class TestSuite(object):
 
         except Exception as e:
             self.log.error('Test suite {}: FAILED by exception\nException: {}'.format(test_suite_name, e))
+            if log_traceback:
+                self.log.error(traceback.format_exc().strip())
             test_suite_result = False
 
         if self.CLASSIFICATION == Classification.FAIL:
