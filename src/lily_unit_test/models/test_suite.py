@@ -12,7 +12,8 @@ class TestSuite(object):
 
     CLASSIFICATION = Classification.PASS
 
-    def __init__(self):
+    def __init__(self, report_path=None):
+        self._report_path = report_path
         self.log = Logger()
 
     def run(self, log_traceback=False):
@@ -97,6 +98,9 @@ class TestSuite(object):
         self.log.shutdown()
 
         return test_suite_result
+
+    def get_report_path(self):
+        return self._report_path
 
     ##############################
     # Override these when needed #
