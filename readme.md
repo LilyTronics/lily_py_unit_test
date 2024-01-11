@@ -2,7 +2,7 @@
 
 Unit test package for adding unit tests to your project.
 
-### Release history:
+## Release history:
 
 This list shows the most recent releases:
 
@@ -19,10 +19,8 @@ This list shows the most recent releases:
 * 202301: V1.2.0
   * test runner run method returns True when passed and False when failed.  
   * fixed package name in distribution
-* 202312: V1.1.0
-  * fix issue with writing HTML report if path does not exist 
-* 202312: V1.0.0
-  * official release
+
+For release notes older than mentioned here, see: release_history.txt
 
 
 ## Installation

@@ -1,0 +1,7 @@
+This file contains all the release notes
+
+* 202312: V1.1.0
+  * fix issue with writing HTML report if path does not exist
+
+* 202312: V1.0.0
+  * official release
