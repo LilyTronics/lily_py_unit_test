@@ -86,6 +86,20 @@ class TestRunner(object):
         if len(exclude_filter) > 0:
             test_suites = list(filter(lambda x: x.__name__ not in exclude_filter, test_suites))
 
+        run_first = options.get('run_first', None)
+        if run_first is not None and run_first != '':
+            matches = list(filter(lambda x: x.__name__ == run_first, test_suites))
+            assert len(matches) == 1, "Test suite to run first with name '{}' not found".format(run_first)
+            test_suites.remove(matches[0])
+            test_suites.insert(0, matches[0])
+
+        run_last = options.get('run_last', None)
+        if run_last is not None and run_last != '':
+            matches = list(filter(lambda x: x.__name__ == run_last, test_suites))
+            assert len(matches) == 1, "Test suite to run last with name '{}' not found".format(run_last)
+            test_suites.remove(matches[0])
+            test_suites.append(matches[0])
+
         n_test_suites = len(test_suites)
         n_digits = len(str(n_test_suites))
         report_name_format = '{{:0{}d}}_{{}}'.format(n_digits)
@@ -149,12 +163,11 @@ if __name__ == '__main__':
     from lily_unit_test import test_classes
 
     test_options = {
-        # 'report_folder': os.path.join(os.path.expanduser('~'), TestRunner.REPORT_FOLDER),
         'create_html_report': True,
         'open_in_browser': True,
         'no_log_files': True,
-        # 'include_test_suites': ['TestClassEmpty', 'TestClassPass'],
-        # 'exclude_test_suites': ['TestClassSetupFailException', 'TestClassTeardownFailException'],
+        'run_first': 'TestEnvironmentSetup',
+        'run_last': 'TestEnvironmentCleanup'
     }
 
     test_result = TestRunner.run(os.path.dirname(test_classes.__file__), test_options)
