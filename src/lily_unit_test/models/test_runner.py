@@ -111,7 +111,7 @@ class TestRunner(object):
                 test_suite_name = test_suite.__name__
                 test_runner_log.empty_line()
                 test_runner_log.info('Run test suite: {}'.format(test_suite_name))
-                ts = test_suite()
+                ts = test_suite(report_path)
                 result = ts.run()
                 if result is None or result:
                     n_test_suites_passed += 1
