@@ -11,13 +11,11 @@ import webbrowser
 from datetime import datetime
 from lily_unit_test.models.html_report import generate_html_report
 from lily_unit_test.models.logger import Logger
+from lily_unit_test.models.test_settings import TestSettings
 from lily_unit_test.models.test_suite import TestSuite
 
 
 class TestRunner(object):
-
-    REPORT_TIME_STAMP_FORMAT = "%Y%m%d_%H%M%S"
-    REPORT_FOLDER = 'lily_unit_test_reports'
 
     ###########
     # Private #
@@ -68,13 +66,13 @@ class TestRunner(object):
 
         report_path = options.get(
             'report_folder',
-            os.path.join(os.path.dirname(test_suites_path), cls.REPORT_FOLDER)
+            os.path.join(os.path.dirname(test_suites_path), TestSettings.REPORT_FOLDER_NAME)
         )
         write_log_files = not options.get('no_log_files', False)
 
         report_data = {}
         test_runner_log = Logger(False)
-        time_stamp = datetime.now().strftime(cls.REPORT_TIME_STAMP_FORMAT)
+        time_stamp = datetime.now().strftime(TestSettings.REPORT_TIME_STAMP_FORMAT)
 
         test_suites = cls._populate_test_suites(test_suites_path)
 
