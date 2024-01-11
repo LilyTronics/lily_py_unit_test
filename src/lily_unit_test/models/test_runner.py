@@ -108,14 +108,10 @@ class TestRunner(object):
             for i, test_suite in enumerate(test_suites):
                 test_suite_name = test_suite.__name__
                 test_runner_log.empty_line()
-                test_runner_log.info('Run test suite: {}'.format(test_suite_name))
                 ts = test_suite(report_path)
                 result = ts.run()
                 if result is None or result:
                     n_test_suites_passed += 1
-                    test_runner_log.info('Test suite {}: PASSED'.format(test_suite_name))
-                else:
-                    test_runner_log.error('Test suite {}: FAILED'.format(test_suite_name))
 
                 report_id = report_name_format.format(i + 2, test_suite_name)
                 report_data[report_id] = ts.log.get_log_messages()
