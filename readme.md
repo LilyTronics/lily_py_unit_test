@@ -6,6 +6,9 @@ Unit test package for adding unit tests to your project.
 
 This list shows the most recent releases:
 
+* 202301: V1.6.0
+  * test runner has options to run a specific test suite first or last 
+  * test suit holds the report folder name 
 * 202301: V1.5.0
   * test suite has an option to log traceback in case of an exception
 * 202301: V1.4.0
@@ -295,24 +298,29 @@ The following methods can be used:
 
 * **info( *message* ):**
   
-  Log an information level message.<br />&nbsp;
+  Log an information level message.
+  <br />&nbsp;
 
 * **debug( *message* ):**
 
-  Log a debug level message.<br />&nbsp;
+  Log a debug level message.
+
 
 * **error( *message* ):**
 
-  Log an error level message.<br />&nbsp;
+  Log an error level message.
+
 
 * **empty_line( ):**
 
-  Add an empty line to the log.<br />&nbsp;
+  Add an empty line to the log.
+
 
 * **get_log_messages():**
 
   Returns a *reference* to the list object with the log messages.<br />
-  To get a copy of the list, use: `get_log_messages().copy()`.<br />&nbsp;
+  To get a copy of the list, use: `get_log_messages().copy()`.
+
 
 The following methods are used internally, and it is not advised to use them.
 
@@ -328,13 +336,15 @@ The following methods are used internally, and it is not advised to use them.
     * log.TYPE_STDOUT: message from stdout (when print is used)
     * log.TYPE_STDERR: message from stderr (when an exception is raised)
     * log.TYPE_EMPTY_LINE: insert an empty line
-  * message_text: a string containing the message (can be multi line)<br />&nbsp;
+  * message_text: a string containing the message (can be multi line)
+
 
 * **shutdown():**
 
   Shuts down the logger. This should be called when the logger is no longer needed.
   This is automatically called when the test suite is done testing.
   Even when this method is called, the log messages are still available in the buffer.
+
 
 Below some examples of log messages.
 
@@ -423,9 +433,22 @@ The log messages will show this:
 2024-01-05 19:39:46.530 | ERROR  | Test suite TestSuiteClassification: FAILED
 ```
 
-### Test methods
+### Test suite methods
 
-The test suite has some test methods that might be useful to use.
+The test suite has the following methods:
+
+* **\_\_init\_\_( *report_path=None* ):**
+
+  Constructor of the test suite. Optionally the report folder name can be set.
+  This is automatically done by the test runner when running a test suite.
+  This report path can be used in the tests.
+  The test suite itself is not using this.
+
+
+* **get_report_path():**
+  
+  Returns the report path which was passed to the test suite in the constructor.
+
 
 * **run( *log_traceback=False* ):**
   
@@ -433,8 +456,9 @@ The test suite has some test methods that might be useful to use.
   * First, the setup method is run. If the setup fails, the test suite stops running.
   * Second, all test methods are run (methods starting with `test_`).
   * Finally, the teardown is run.
-  
+
   In case of an exception, extra traceback information can be logged by setting the `log_traceback` parameter to True.
+
 
 * **fail( *error_message*, *raise_exception=True* ):**
   
@@ -443,6 +467,7 @@ The test suite has some test methods that might be useful to use.
 
   Setting the `raise_exception` to False, does not raise an exception and the test suite continues.
   The fail method always returns `False`.
+
 
   ```python
   class MyTestSuite(lily_unit_test.TestSuite):
@@ -594,7 +619,13 @@ options = {
     'exclude_test_suites': [
         'TestSuite03',
         'TestSuite04'
-    ]
+    ],
+  
+    # Run this test suite first, can be used to setup your test environment
+    'run_first': 'TestEnvironmentSetup',
+  
+    # Run this test suite last, can be used to cleanup your test environment
+    'run_last': 'TestEnvironmentCleanup'
 }
 
 TestRunner.run('../src', options)
