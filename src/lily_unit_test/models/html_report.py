@@ -2,6 +2,7 @@
 Generate HTML report.
 """
 
+import html
 import os
 
 from datetime import datetime
@@ -77,9 +78,9 @@ def _generate_test_suite_results(test_suite_key, log_messages):
     end = datetime.strptime(test_end, time_format)
     duration = end - start
 
-    output = '<div class ="test-suite {}">'.format(test_result.lower())
+    output = '<div class="test-suite {}">'.format(test_result.lower())
     output += '<span class="expand" title="Show/hide log messages" '
-    output += 'id="button_{0}" onclick="show_log(\"{0}\")">&plus;</span> '.format(test_suite_key)
+    output += 'id="button_{0}" onclick="show_log(\'{0}\')">&plus;</span> '.format(test_suite_key)
     output += "{}: {} ({})</div>\n".format(test_name, test_result, duration)
     output += '<div class="log-messages" style="display:none" id="log_{}">\n'.format(test_suite_key)
     for log_message in log_messages:
@@ -89,6 +90,8 @@ def _generate_test_suite_results(test_suite_key, log_messages):
             level = parts[1].strip().lower()
         if log_message.strip() == "":
             log_message = "&nbsp;"
+        else:
+            log_message = html.escape(log_message)
         output += '<div class="log {}"><pre>{}</pre></div>\n'.format(level, log_message)
     output += "</div>\n"
 
@@ -116,7 +119,8 @@ if __name__ == "__main__":
     test_logger.error("This is an error message")
     test_logger.debug("The next line is empty")
     test_logger.empty_line()
-    test_logger.debug('This line contains HTML entities: > < " \" &. These must be escaped properly.')
+    test_logger.debug('This line contains HTML entities: <div class="error">&nbsp;</div>. '
+                      'These must be escaped properly.')
     test_logger.handle_message(test_logger.TYPE_STDOUT, "This is a stdout message\n")
     test_logger.handle_message(test_logger.TYPE_STDERR, "This is a stderr message\n")
     test_logger.info("Test case TestCreateHtmlReport.test_01_log_message_types: PASSED")
