@@ -17,6 +17,6 @@ class TestClassFail(TestSuite):
         _a = 1 / 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     TestClassFail().run()

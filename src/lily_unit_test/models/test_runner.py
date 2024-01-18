@@ -29,10 +29,10 @@ class TestRunner(object):
         for current_folder, sub_folders, filenames in os.walk(test_suites_path):
             sub_folders.sort()
             filenames.sort()
-            for filename in filter(lambda x: x.endswith('.py'), filenames):
-                import_path = os.path.join(current_folder[len(test_suites_path) + 1:], filename.replace('.py', ''))
-                import_path = import_path.replace(os.sep, '.')
-                module = __import__(str(import_path), fromlist=['*'])
+            for filename in filter(lambda x: x.endswith(".py"), filenames):
+                import_path = os.path.join(current_folder[len(test_suites_path) + 1:], filename.replace(".py", ""))
+                import_path = import_path.replace(os.sep, ".")
+                module = __import__(str(import_path), fromlist=["*"])
                 for attribute_name in dir(module):
                     attribute = getattr(module, attribute_name)
                     if inspect.isclass(attribute):
@@ -48,8 +48,8 @@ class TestRunner(object):
         if not os.path.isdir(output_path):
             os.makedirs(output_path)
 
-        with open(os.path.join(str(output_path), filename), 'w') as fp:
-            fp.writelines(map(lambda x: '{}\n'.format(x), logger.get_log_messages()))
+        with open(os.path.join(str(output_path), filename), "w") as fp:
+            fp.writelines(map(lambda x: "{}\n".format(x), logger.get_log_messages()))
 
     ##########
     # Public #
@@ -65,10 +65,10 @@ class TestRunner(object):
         test_suites_path = os.path.abspath(test_suites_path)
 
         report_path = options.get(
-            'report_folder',
+            "report_folder",
             os.path.join(os.path.dirname(test_suites_path), TestSettings.REPORT_FOLDER_NAME)
         )
-        write_log_files = not options.get('no_log_files', False)
+        write_log_files = not options.get("no_log_files", False)
 
         report_data = {}
         test_runner_log = Logger(False)
@@ -76,23 +76,23 @@ class TestRunner(object):
 
         test_suites = cls._populate_test_suites(test_suites_path)
 
-        include_filter = options.get('include_test_suites', [])
+        include_filter = options.get("include_test_suites", [])
         if len(include_filter) > 0:
             test_suites = list(filter(lambda x: x.__name__ in include_filter, test_suites))
 
-        exclude_filter = options.get('exclude_test_suites', [])
+        exclude_filter = options.get("exclude_test_suites", [])
         if len(exclude_filter) > 0:
             test_suites = list(filter(lambda x: x.__name__ not in exclude_filter, test_suites))
 
-        run_first = options.get('run_first', None)
-        if run_first is not None and run_first != '':
+        run_first = options.get("run_first", None)
+        if run_first is not None and run_first != "":
             matches = list(filter(lambda x: x.__name__ == run_first, test_suites))
             assert len(matches) == 1, "Test suite to run first with name '{}' not found".format(run_first)
             test_suites.remove(matches[0])
             test_suites.insert(0, matches[0])
 
-        run_last = options.get('run_last', None)
-        if run_last is not None and run_last != '':
+        run_last = options.get("run_last", None)
+        if run_last is not None and run_last != "":
             matches = list(filter(lambda x: x.__name__ == run_last, test_suites))
             assert len(matches) == 1, "Test suite to run last with name '{}' not found".format(run_last)
             test_suites.remove(matches[0])
@@ -100,10 +100,10 @@ class TestRunner(object):
 
         n_test_suites = len(test_suites)
         n_digits = len(str(n_test_suites))
-        report_name_format = '{{:0{}d}}_{{}}'.format(n_digits)
+        report_name_format = "{{:0{}d}}_{{}}".format(n_digits)
         if n_test_suites > 0:
             n_test_suites_passed = 0
-            test_runner_log.info('Run {} test suites from folder: {}'.format(n_test_suites, test_suites_path))
+            test_runner_log.info("Run {} test suites from folder: {}".format(n_test_suites, test_suites_path))
 
             for i, test_suite in enumerate(test_suites):
                 test_suite_name = test_suite.__name__
@@ -116,53 +116,53 @@ class TestRunner(object):
                 report_id = report_name_format.format(i + 2, test_suite_name)
                 report_data[report_id] = ts.log.get_log_messages()
                 if write_log_files:
-                    cls._write_log_messages_to_file(report_path, time_stamp, '{}.txt'.format(report_id), ts.log)
+                    cls._write_log_messages_to_file(report_path, time_stamp, "{}.txt".format(report_id), ts.log)
 
             test_runner_log.empty_line()
             ratio = 100 * n_test_suites_passed / n_test_suites
-            test_runner_log.info('{} of {} test suites passed ({:.1f}%)'.format(
+            test_runner_log.info("{} of {} test suites passed ({:.1f}%)".format(
                                  n_test_suites_passed, n_test_suites, ratio))
             if n_test_suites == n_test_suites_passed:
-                test_runner_log.info('Test runner result: PASSED')
+                test_runner_log.info("Test runner result: PASSED")
                 test_run_result = True
             else:
-                test_runner_log.error('Test runner result: FAILED')
+                test_runner_log.error("Test runner result: FAILED")
 
         else:
-            test_runner_log.info('No test suites found in folder: {}'.format(test_suites_path))
+            test_runner_log.info("No test suites found in folder: {}".format(test_suites_path))
 
         test_runner_log.shutdown()
 
-        report_id = report_name_format.format(1, 'TestRunner')
+        report_id = report_name_format.format(1, "TestRunner")
         report_data[report_id] = test_runner_log.get_log_messages()
         if write_log_files:
-            cls._write_log_messages_to_file(report_path, time_stamp, '{}.txt'.format(report_id), test_runner_log)
+            cls._write_log_messages_to_file(report_path, time_stamp, "{}.txt".format(report_id), test_runner_log)
 
-        if options.get('create_html_report', False):
+        if options.get("create_html_report", False):
             html_output = generate_html_report(report_data)
-            filename = os.path.join(report_path, '{}_TestRunner.html'.format(time_stamp))
+            filename = os.path.join(report_path, "{}_TestRunner.html".format(time_stamp))
             if not os.path.isdir(report_path):
                 os.makedirs(report_path)
-            with open(filename, 'w') as fp:
+            with open(filename, "w") as fp:
                 fp.write(html_output)
 
-            if options.get('open_in_browser', False):
+            if options.get("open_in_browser", False):
                 webbrowser.open(filename)
 
         return test_run_result
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     from lily_unit_test import test_classes
 
     test_options = {
-        'create_html_report': True,
-        'open_in_browser': True,
-        'no_log_files': True,
-        'run_first': 'TestEnvironmentSetup',
-        'run_last': 'TestEnvironmentCleanup'
+        "create_html_report": True,
+        "open_in_browser": True,
+        "no_log_files": True,
+        "run_first": "TestEnvironmentSetup",
+        "run_last": "TestEnvironmentCleanup"
     }
 
     test_result = TestRunner.run(os.path.dirname(test_classes.__file__), test_options)
-    print('Test runner result:', test_result)
+    print("Test runner result:", test_result)

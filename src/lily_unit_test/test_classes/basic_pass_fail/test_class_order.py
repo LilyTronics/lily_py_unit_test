@@ -23,9 +23,9 @@ class TestClassOrder(TestSuite):
 
     def test_order(self):
         for i, j in enumerate(self.ORDER):
-            self.fail_if(i != j, f'Test order is not correct for {i}, {j}')
+            self.fail_if(i != j, f"Test order is not correct for {i}, {j}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     TestClassOrder().run()

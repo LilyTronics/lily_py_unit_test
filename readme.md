@@ -63,14 +63,14 @@ class MyTestSuite(lily_unit_test.TestSuite):
 
     @staticmethod
     def test_add_one():
-        assert MyClass.add_one(3) == 4, 'Wrong return value'
+        assert MyClass.add_one(3) == 4, "Wrong return value"
 
     @staticmethod
     def test_add_two():
-        assert MyClass.add_two(3) == 5, 'Wrong return value'
+        assert MyClass.add_two(3) == 5, "Wrong return value"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     """
     Run the test code, when not imported.
     """
@@ -98,7 +98,7 @@ The test runner is an object that runs test suites from a specific folder recurs
 ```python
 from lily_unit_test import TestRunner
 
-TestRunner.run('path/to/test_suites')
+TestRunner.run("path/to/test_suites")
 ```
 
 The test runner will create a folder with reports about the tests that were executed.
@@ -169,9 +169,9 @@ MyTestSuite().run()
 
 # Using the test result
 if MyTestSuite().run():
-    print('Yay, the test suite passed!')
+    print("Yay, the test suite passed!")
 else:
-    print('Oops, the test suite failed...')
+    print("Oops, the test suite failed...")
 ```
 
 ### Using setup and teardown
@@ -240,13 +240,13 @@ def test_login(self):
     self.connection = connect_to_server(user, password)
     # Fail by raising an exception
     if not self.connection.is_connected():
-        raise Exception('We are not connected')
+        raise Exception("We are not connected")
     # The return value is by default None
 
 def test_login(self):
     self.connection = connect_to_server(user, password)
     # Fail by assert
-    assert self.connection.is_connected(), 'We are not connected'
+    assert self.connection.is_connected(), "We are not connected"
     # The return value is by default None
 
 def test_login(self):
@@ -279,9 +279,9 @@ ts = MyTestSuite()
 
 # Access the logger
 # Write a message to the internal buffer and it will also shown on the standard output
-ts.log.info('Log an info level message')
+ts.log.info("Log an info level message")
 
-print('This mesage will be written to the logger')
+print("This mesage will be written to the logger")
 
 # Get a reference to the list with messages
 messages = ts.log.get_log_messages()
@@ -349,24 +349,24 @@ Below some examples of log messages.
 ```python
 def test_login(self):
     # Info message
-    self.log.info('Connect to server')
+    self.log.info("Connect to server")
     self.connection = connect_to_server(user, password)
     
     # Debug message
-    self.log.debug('Connection status: {}'.format(self.connection.is_connected())
+    self.log.debug("Connection status: {}".format(self.connection.is_connected())
     
     # Let's check the connection properties using print
     # These messages will be written automatically to the logger
     # This can be useful for a quick logging of some variables
-    print('Server IP  :', self.connection.get_server_ip())
-    print('Server name:', self.connection.get_server_name())
+    print("Server IP  :", self.connection.get_server_ip())
+    print("Server name:", self.connection.get_server_name())
     
     # Insert an empty line
     self.log.empty_line()
     
     if not self.connection.is_connected()
         # Error message
-        self.log.error('We are not connected')
+        self.log.error("We are not connected")
         
     return self.connection.is_connected()
 ```
@@ -423,11 +423,11 @@ The log messages will show this:
 2024-01-05 19:35:54.328 | ERROR  | Test suite TestSuiteClassification: FAILED
 
 - Classification set to FAIL and test suite fails because of a known issue, but is accepted
-2024-01-05 19:38:17.989 | INFO   | Test suite failed, but accepted because classification is set to FAIL
+2024-01-05 19:38:17.989 | INFO   | Test suite failed, but accepted because classification is set to 'FAIL'
 2024-01-05 19:38:17.989 | INFO   | Test suite TestSuiteClassification: PASSED
 
 - Classification set to FAIL and test suite passes because of the known issue is solved
-2024-01-05 19:39:46.530 | ERROR  | Test suite passed, but a failure was expected because classification is set to FAIL
+2024-01-05 19:39:46.530 | ERROR  | Test suite passed, but a failure was expected because classification is set to 'FAIL'
 2024-01-05 19:39:46.530 | ERROR  | Test suite TestSuiteClassification: FAILED
 ```
 
@@ -478,7 +478,7 @@ The test suite has the following methods:
             result = passed
             if not check_if_someting_is_ok:
                 # Log a failure without exception
-                result = self.fail('Someting is not OK', False)
+                result = self.fail("Someting is not OK", False)
             
             ...
             do some other stuff
@@ -500,10 +500,10 @@ The test suite has the following methods:
   class MyTestSuite(lily_unit_test.TestSuite):
   
         def test_something(self):
-            self.fail_if(my_string == 'Is this OK?', 'The string is not OK')
+            self.fail_if(my_string != "Is this OK?", "The string is not OK")
             
             # Result will be False if the expressing is True, meaning a failure
-            result = self.fail_if(my_string == 'Is this OK?', 'The string is not OK', False)
+            result = self.fail_if(my_string != "Is this OK?", "The string is not OK", False)
             
             # return whether we passed or failed
             return result
@@ -523,7 +523,7 @@ Running the test runner is a simple as:
 ```python
 from lily_unit_test import TestRunner
 
-TestRunner.run('path/to/test_suites')
+TestRunner.run("path/to/test_suites")
 ```
 
 ### Collecting and running test suites
@@ -551,7 +551,7 @@ The test_runner.py contains the following code:
 ```python
 from lily_unit_test import TestRunner
 
-TestRunner.run('../src')
+TestRunner.run("../src")
 ```    
 
 The test runner is located in the `./test` folder.
@@ -594,39 +594,39 @@ from lily_unit_test import TestRunner
 
 options = {
     # Set the folder where the report is written to
-    'report_folder': 'path/to/reports',
+    "report_folder": "path/to/reports",
 
     # Creates a single HTML file with all the results
     # See example in: examples/example_report.html
-    'create_html_report': True,
+    "create_html_report": True,
             
     # Open the HTML report in the default browser 
-    'open_in_browser': True,
+    "open_in_browser": True,
     
     # Do not write log files, in case using the HTML report or other logging facilities
-    'no_log_files': True,
+    "no_log_files": True,
 
     # Run only the test suites in this list, skip others
     # If the list is empty or omitted, all test suites are run
-    'include_test_suites': [
-        'TestSuite01',
-        'TestSuite02'
+    "include_test_suites": [
+        "TestSuite01",
+        "TestSuite02"
     ],
 
     # Skip test suites in this list
-    'exclude_test_suites': [
-        'TestSuite03',
-        'TestSuite04'
+    "exclude_test_suites": [
+        "TestSuite03",
+        "TestSuite04"
     ],
   
     # Run this test suite first, can be used to setup your test environment
-    'run_first': 'TestEnvironmentSetup',
+    "run_first": "TestEnvironmentSetup",
   
     # Run this test suite last, can be used to cleanup your test environment
-    'run_last': 'TestEnvironmentCleanup'
+    "run_last": "TestEnvironmentCleanup"
 }
 
-TestRunner.run('../src', options)
+TestRunner.run("../src", options)
 ```
 
 Because the options are in a dictionary, they can be easily read from a JSON file.
@@ -635,7 +635,7 @@ Because the options are in a dictionary, they can be easily read from a JSON fil
 import json
 from lily_unit_test import TestRunner
 
-TestRunner.run('../src', json.load(open('/path/to/json_file', 'r')))
+TestRunner.run("../src", json.load(open("/path/to/json_file", "r")))
 ```
 
 This makes it easy to automate tests using different configurations.

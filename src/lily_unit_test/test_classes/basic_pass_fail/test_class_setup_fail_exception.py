@@ -17,6 +17,6 @@ class TestClassSetupFailException(TestSuite):
         return True
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     TestClassSetupFailException().run()

@@ -26,14 +26,14 @@ class MyTestSuite(lily_unit_test.TestSuite):
 
     @staticmethod
     def test_add_one():
-        assert MyClass.add_one(3) == 4, 'Wrong return value'
+        assert MyClass.add_one(3) == 4, "Wrong return value"
 
     @staticmethod
     def test_add_two():
-        assert MyClass.add_two(3) == 5, 'Wrong return value'
+        assert MyClass.add_two(3) == 5, "Wrong return value"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     """
     Run the test code, when not imported.
     """

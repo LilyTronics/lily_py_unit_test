@@ -11,9 +11,9 @@ class TestFailIfWithException(TestSuite):
     CLASSIFICATION = Classification.FAIL
 
     def test_assert_if(self):
-        self.fail('This should generate an exception')
+        self.fail("This should generate an exception")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     TestFailIfWithException().run()
