@@ -6,19 +6,8 @@ Unit test package for adding unit tests to your project.
 
 This list shows the most recent releases:
 
-* 202301: V1.6.0
-  * test runner has options to run a specific test suite first or last 
-  * test suit holds the report folder name 
-* 202301: V1.5.0
-  * test suite has an option to log traceback in case of an exception
-* 202301: V1.4.0
-  * test suite has fail methods for making tests fail
-  * test methods are now executed in the order they are created (not alphabetical)
-* 202301: V1.3.0
-  * test runner can have a classification for handling known issues.
-* 202301: V1.2.0
-  * test runner run method returns True when passed and False when failed.  
-  * fixed package name in distribution
+* 202301: V1.7.0
+  * HTML entities in log messages are now properly escaped in the HTML report.
 
 For release notes older than mentioned here, see: release_history.txt
 
