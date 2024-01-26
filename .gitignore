@@ -16,3 +16,6 @@
 
 # Twine config file (contains a token and must not be stored in the repo)
 /twine.conf
+
+# Generated documentation
+/docs/_build/*
