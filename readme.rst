@@ -1,4 +1,3 @@
-.. include:: https://github.com/LilyTronics/lily-py-unit-test/blob/main/docs/introduction.rst
 Lily unit test package for Python
 =================================
 
