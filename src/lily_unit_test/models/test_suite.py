@@ -2,6 +2,7 @@
 Test suite class.
 """
 
+import threading
 import time
 import traceback
 
@@ -192,6 +193,65 @@ class TestSuite(object):
         """
         time.sleep(sleep_time)
 
+    @staticmethod
+    def start_thread(target, args=()):
+        """
+        Starts a function (target) in a separate thread with the given arguments.
+
+        :param target: function to start as a thread
+        :param args: arguments to pass to the thread (see Python threading for details)
+        :return: a reference to the started thread
+
+        The thread is started as a daemon thread, meaning that the thread will be terminated when test execution stops.
+        The thread can be monitored by it's is_alive() method.
+
+        .. code-block:: python
+
+            import lily_unit_test
+
+            class MyTestSuite(liy_unit_test.TestSuite):
+
+                def back_ground_job(some_parameter)
+                    ...
+                    do some time-consuming stuff in the background
+                    ...
+
+                def test_something(self):
+                    # Start our background job
+                    t = self.start_thread(self.back_ground_job, (parameter_value, ))
+
+                    ...
+                    Do some other stuff while the job is running
+                    ...
+
+                    # Check if our job is running
+                    if t.is_alive():
+                        self.log.debug("The job is still running")
+
+                    # Wait for the job to finish, check every 0.5 seconds with a timeout of 30 seconds
+                    timeout = 30
+                    while timeout > 0:
+                        if not t.is_alive():
+                            self.log.debug("The job is done")
+                            break
+                        self.sleep(0.5)
+                        timeout -= 0.5
+                    else:
+                        self.fail("The thread did not finish within 30 seconds.")
+
+                    # Check result from the thread
+                    ...
+
+        Note that if an exception is raised in the thread, the thread is ended, but the test suite does not fail.
+        You need to check the result from the thread your self.
+
+        Note that the thread may be hanging for some reason and does not stop. When checking if the thread is finished,
+        a timeout should be included.
+        """
+        t = threading.Thread(target=target, args=args)
+        t.daemon = True
+        t.start()
+        return t
 
 if __name__ == "__main__":
 
