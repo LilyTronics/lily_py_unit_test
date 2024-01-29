@@ -16,6 +16,9 @@ from lily_unit_test.models.test_suite import TestSuite
 
 
 class TestRunner(object):
+    """
+    Static class that runs test suites in a specified folder.
+    """
 
     ###########
     # Private #
@@ -57,6 +60,57 @@ class TestRunner(object):
 
     @classmethod
     def run(cls, test_suites_path, options=None):
+        """
+        Run the test suites that are found in the given path recursively.
+
+        :param test_suites_path: path to the test suites
+        :param options: a dictionary with options, if no dictionary is given, default options are used
+        :return: True, if all test suites are passed
+
+        Options:
+        The options dictionary can have the following values:
+
+        ===================== ========================== =============================================
+        Key name              Default value              Description
+        ===================== ========================== =============================================
+        | report_folder       | "lily_unit_test_reports" | The path where the reports are written.
+                                                         | The path is by default at the same level
+                                                         | as the test_suites_path.
+                                                         | When defining a path, use an absolute path.
+        | create_html_report  | False                    | Create a single file HTML report.
+        | open_in_browser     | False                    | Open the HTML report in the default
+                                                         | browser when all tests are finished.
+        | no_log_files        | False                    | Skip writing text log files.
+                                                         | In case another form of logging is used,
+                                                         | writing text log files can be skipped.
+        | include_test_suites | []                       | Only run the test suites in this list.
+                                                         | Other test suites are skipped.
+        | exclude_test_suites | []                       | Skip the test suites in this list.
+        | run_first           | None                     | Run this test suite first.
+        | run_last            | None                     | Run this test suite last.
+        ===================== ========================== =============================================
+
+        Not all keys have to present, you can omit keys. For the missing keys, default values are used.
+
+        For test suite names, use their class names:
+
+        .. code-block:: python
+
+            import lily_unit_test
+
+            class MyTestSuite(lily_unit_test.TestSuite):
+                ...
+                some test stuff
+                ...
+
+            # options for the test runner:
+            options = {
+                "include_test_suites": ["MyTestSuite"]
+            }
+            # Run the test runner from the current folder with the given options
+            lily_unit_test.TestRunner.run(".", options)
+
+        """
         test_run_result = False
 
         if options is None:
