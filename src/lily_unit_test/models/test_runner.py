@@ -208,7 +208,7 @@ class TestRunner(object):
 
 if __name__ == "__main__":
 
-    import test_classes
+    import test_suites
 
     test_options = {
         "create_html_report": True,
@@ -218,5 +218,5 @@ if __name__ == "__main__":
         "run_last": "TestEnvironmentCleanup"
     }
 
-    test_result = TestRunner.run(os.path.dirname(test_classes.__file__), test_options)
+    test_result = TestRunner.run(os.path.dirname(test_suites.__file__), test_options)
     print("Test runner result:", test_result)
