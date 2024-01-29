@@ -4,4 +4,4 @@ Test Suite API
 .. currentmodule:: lily_unit_test
 
 .. autoclass:: TestSuite
-    :members: run, get_report_path, setup, teardown, fail, fail_if
+    :members: run, get_report_path, setup, teardown, fail, fail_if, sleep, start_thread, wait_for

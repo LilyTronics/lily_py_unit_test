@@ -253,6 +253,53 @@ class TestSuite(object):
         t.start()
         return t
 
+    @staticmethod
+    def wait_for(object_to_check, expected_result, timeout, interval):
+        """
+        Wait for a certain result with a certain timeout
+
+        :param object_to_check: object must be a list with one element or a function.
+                                In case of a function the function is called in every iteration.
+        :param expected_result: the expected value for the object to check.
+        :param timeout: how long to check (float in seconds).
+        :param interval: at what interval to check (float in seconds).
+        :return: True when the expected result is met, False when the timer times out.
+
+        This function only works with mutable variables or objects that can be called.
+        It does not work on immutable variable since they are not passed as reference.
+
+        .. code-block:: python
+
+            import lily_unit_test
+
+            class MyTestSuite(lily_unit_test.TestSuite):
+
+                def test_wait_for_variable(self):
+                    # Set initial value of the variable, put in a list, so it is mutable
+                    self._test_value[0] = False
+
+                    # Wait for the variable to change. Wait for automatically checks the first
+                    # element of the list
+                    result = self.wait_for(self._test_value, True, 1, 0.1)
+
+                def test_wait_for_function(self):
+                    # Check the outcome of a function, for example checking if a server is connected.
+                    result = self.wait_for(server.is_connected, True, 5, 0.1)
+
+        """
+        result = None
+        while timeout > 0:
+            if callable(object_to_check):
+                result = object_to_check()
+            elif type(object_to_check) is list and len(object_to_check) > 0:
+                result = object_to_check[0]
+            if result == expected_result:
+                return True
+            time.sleep(interval)
+            timeout -= interval
+        return False
+
+
 if __name__ == "__main__":
 
     import os
