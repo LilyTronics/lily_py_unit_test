@@ -2,6 +2,7 @@
 Test suite class.
 """
 
+import time
 import traceback
 
 from lily_unit_test.models.classification import Classification
@@ -181,6 +182,15 @@ class TestSuite(object):
             self.fail(error_message, raise_exception)
 
         return not expression
+
+    @staticmethod
+    def sleep(sleep_time):
+        """
+        Simple wrapper for time.sleep()
+
+        :param sleep_time: time to sleep in seconds (can be float)
+        """
+        time.sleep(sleep_time)
 
 
 if __name__ == "__main__":
