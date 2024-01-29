@@ -12,4 +12,4 @@ options = {
     "run_last": "TestEnvironmentCleanup"
 }
 
-TestRunner.run(".", options)
+TestRunner.run("./test_suites", options)
