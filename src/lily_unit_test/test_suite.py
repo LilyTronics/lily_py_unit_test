@@ -6,8 +6,8 @@ import threading
 import time
 import traceback
 
-from lily_unit_test.models.classification import Classification
-from lily_unit_test.models.logger import Logger
+from lily_unit_test.classification import Classification
+from lily_unit_test.logger import Logger
 
 
 class TestSuite(object):
@@ -305,6 +305,6 @@ if __name__ == "__main__":
     import os
     import test_suites
 
-    from lily_unit_test.models.test_runner import TestRunner
+    from lily_unit_test.test_runner import TestRunner
 
     TestRunner.run(os.path.dirname(test_suites.__file__))

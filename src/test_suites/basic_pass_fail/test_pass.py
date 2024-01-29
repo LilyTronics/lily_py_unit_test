@@ -2,7 +2,7 @@
 Test class for testing passing tests.
 """
 
-from lily_unit_test.models.test_suite import TestSuite
+from lily_unit_test.test_suite import TestSuite
 
 
 class TestPass(TestSuite):

@@ -2,7 +2,7 @@
 Test class for testing the order of execution.
 """
 
-from lily_unit_test.models.test_suite import TestSuite
+from lily_unit_test.test_suite import TestSuite
 
 
 class TestOrder(TestSuite):

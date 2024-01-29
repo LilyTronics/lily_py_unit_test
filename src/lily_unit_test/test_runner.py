@@ -9,10 +9,10 @@ import sys
 import webbrowser
 
 from datetime import datetime
-from lily_unit_test.models.html_report import generate_html_report
-from lily_unit_test.models.logger import Logger
-from lily_unit_test.models.test_settings import TestSettings
-from lily_unit_test.models.test_suite import TestSuite
+from lily_unit_test.html_report import generate_html_report
+from lily_unit_test.logger import Logger
+from lily_unit_test.test_settings import TestSettings
+from lily_unit_test.test_suite import TestSuite
 
 
 class TestRunner(object):

@@ -2,8 +2,8 @@
 Test class for testing the fail_if method.
 """
 
-from lily_unit_test.models.classification import Classification
-from lily_unit_test.models.test_suite import TestSuite
+from lily_unit_test.classification import Classification
+from lily_unit_test.test_suite import TestSuite
 
 
 class TestFailIfNoException(TestSuite):

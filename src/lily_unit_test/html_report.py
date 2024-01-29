@@ -7,7 +7,7 @@ import os
 
 from datetime import datetime
 from string import Template
-from lily_unit_test.models.logger import Logger
+from lily_unit_test.logger import Logger
 
 
 def generate_html_report(report_data):
