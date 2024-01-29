@@ -284,6 +284,7 @@ The test suite has some build-in methods that can be used in the test methods.
 .. currentmodule:: lily_unit_test
 
 .. automethod:: TestSuite.fail
+    :no-index:
 
 The fail methods logs an error message and raises an exception. By default, an exception is raised.
 When the exception is raised, the test suite stops and is reported as failed.
@@ -319,6 +320,7 @@ The fail method always returns :code:`False`.
             return result
 
 .. automethod:: TestSuite.fail_if
+    :no-index:
 
 If the expression evaluates to :code:`True`, an error message is logged and exception is raised by default.
 When the exception is raised, the test suite stops and is reported as failed.

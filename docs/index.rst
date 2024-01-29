@@ -8,3 +8,4 @@
     Test Suite <test_suite.rst>
     Test Runner <test_runner.rst>
     Test Suite API <test_suite_api.rst>
+    Logger API <logger_api.rst>
