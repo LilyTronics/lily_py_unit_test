@@ -5,7 +5,7 @@ Test class for testing the order of execution.
 from lily_unit_test.models.test_suite import TestSuite
 
 
-class TestClassOrder(TestSuite):
+class TestOrder(TestSuite):
 
     ORDER = []
 
@@ -32,4 +32,4 @@ class TestClassOrder(TestSuite):
 
 if __name__ == "__main__":
 
-    TestClassOrder().run()
+    TestOrder().run()

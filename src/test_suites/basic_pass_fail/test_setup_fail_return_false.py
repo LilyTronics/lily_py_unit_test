@@ -1,22 +1,22 @@
 """
-Test class for testing a failing teardown because of an exception.
+Test class for testing a failing setup because of returning False.
 """
 
 from lily_unit_test.models.classification import Classification
 from lily_unit_test.models.test_suite import TestSuite
 
 
-class TestClassTeardownFailException(TestSuite):
+class TestSetupFailReturnFalse(TestSuite):
 
     CLASSIFICATION = Classification.FAIL
+
+    def setup(self):
+        return False
 
     def test_dummy(self):
         return True
 
-    def teardown(self):
-        _a = 1 / 0
-
 
 if __name__ == "__main__":
 
-    TestClassTeardownFailException().run()
+    TestSetupFailReturnFalse().run()

@@ -6,7 +6,7 @@ from lily_unit_test.models.classification import Classification
 from lily_unit_test.models.test_suite import TestSuite
 
 
-class TestClassFail(TestSuite):
+class TestFail(TestSuite):
 
     CLASSIFICATION = Classification.FAIL
 
@@ -19,4 +19,4 @@ class TestClassFail(TestSuite):
 
 if __name__ == "__main__":
 
-    TestClassFail().run()
+    TestFail().run()
