@@ -9,6 +9,9 @@ class TestClassOrder(TestSuite):
 
     ORDER = []
 
+    def setup(self):
+        del self.ORDER[:]
+
     def test_first(self):
         self.ORDER.append(0)
 
@@ -22,8 +25,9 @@ class TestClassOrder(TestSuite):
         self.ORDER.append(3)
 
     def test_order(self):
+        self.log.debug("Order: {}".format(self.ORDER))
         for i, j in enumerate(self.ORDER):
-            self.fail_if(i != j, f"Test order is not correct for {i}, {j}")
+            self.fail_if(i != j, "Test order is not correct for index {}, value {}".format(i, j))
 
 
 if __name__ == "__main__":
