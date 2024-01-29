@@ -186,46 +186,6 @@ The logger can be accessed by the log attribute of the test suite:
 
 Note that you do not need to run the test suite to use the logger.
 
-The following methods can be used:
-
-* **info( *message* ):**
-
-  Log an information level message.
-
-* **debug( *message* ):**
-
-  Log a debug level message.
-
-* **error( *message* ):**
-
-  Log an error level message.
-
-* **empty_line( ):**
-
-  Add an empty line to the log.
-
-* **get_log_messages():**
-
-  Returns a *reference* to the list object with the log messages.<br />
-  To get a copy of the list, use: :code:`get_log_messages().copy()`.
-
-The following methods are used internally, and it is not advised to use them.
-
-* **handle_message( *message_type*, *message_text* ):**
-
-  Writes a message to the internal buffer and to standard output.
-  This method is used by the :code:`info`, :code:`debug`, :code:`error` and :code:`empty_line` methods.
-  The method has the following parameters:
-  * message_type: identifies the message type.
-  * message_text: a string containing the message (can be multi line)
-
-* **shutdown():**
-
-  Shuts down the logger. This should be called when the logger is no longer needed.
-  This is automatically called when the test suite is done testing.
-  Even when this method is called, the log messages are still available in the buffer.
-
-
 Below some examples of log messages.
 
 .. code-block:: python
@@ -254,6 +214,8 @@ Below some examples of log messages.
         return self.connection.is_connected()
 
 Note that logging an error message NOT automatically makes the test fail.
+
+See the logger API documentation for more details.
 
 Classification
 --------------
@@ -317,78 +279,72 @@ The log messages will show this:
 Test suite methods
 ------------------
 
-The test suite has the following methods:
+The test suite has some build-in methods that can be used in the test methods.
 
-* **\_\_init\_\_( *report_path=None* ):**
+.. currentmodule:: lily_unit_test
 
-  Constructor of the test suite. Optionally the report folder name can be set.
-  This is automatically done by the test runner when running a test suite.
-  This report path can be used in the tests.
-  The test suite itself is not using this.
+.. automethod:: TestSuite.fail
 
+The fail methods logs an error message and raises an exception. By default, an exception is raised.
+When the exception is raised, the test suite stops and is reported as failed.
+Setting the :code:`raise_exception` to False, does not raise an exception and the test suite continues.
+The fail method always returns :code:`False`.
 
-* **get_report_path():**
+.. code-block:: python
 
-  Returns the report path which was passed to the test suite in the constructor.
+    class MyTestSuite(lily_unit_test.TestSuite):
 
+        def test_something(self):
+            ...
+            do some things
+            ...
 
-* **run( *log_traceback=False* ):**
+            # In case something is wrong and we cannot continue.
+            if not check_something_that_must_be_good():
+                # Log a failure with exception, this will make the test suite fail.
+                self.fail("Something is wrong and we cannot continue")
 
-  Runs the test suite. The test suite is run as follows:
-  * First, the setup method is run. If the setup fails, the test suite stops running.
-  * Second, all test methods are run (methods starting with :code:`test_`).
-  * Finally, the teardown is run.
+            # In case something is wrong and we still can continue.
+            result = passed
+            if not check_if_something_is_ok():
+                # Log a failure without exception, this will not make the test suite fail.
+                # To make it fail, we use the result value and return it later when we are done.
+                result = self.fail("Something is not OK, but we continue", False)
 
-  In case of an exception, extra traceback information can be logged by setting the :code:`log_traceback` parameter to True.
+            ...
+            do some other stuff
+            ...
 
+            # Return whether we passed or failed
+            return result
 
-* **fail( *error_message*, *raise_exception=True* ):**
+.. automethod:: TestSuite.fail_if
 
-  Logs an error message and raises an exception. By default, an exception is raised.
-  When the exception is raised, the test suite stops and is reported as failed.
+If the expression evaluates to :code:`True`, an error message is logged and exception is raised by default.
+When the exception is raised, the test suite stops and is reported as failed.
+Setting the :code:`raise_exception` to False, does not raise an exception and the test suite continues.
+The fail_if method returns :code:`False` if the expression is :code:`True`.
 
-  Setting the :code:`raise_exception` to False, does not raise an exception and the test suite continues.
-  The fail method always returns :code:`False`.
+Let's rewrite the test method in the previous example, but now using :code:`fail_if`.
+The test looks more simpler now.
 
+.. code-block:: python
 
-  .. code-block:: python
+    class MyTestSuite(lily_unit_test.TestSuite):
 
-      class MyTestSuite(lily_unit_test.TestSuite):
+        def test_something(self):
+            ...
+            do some things
+            ...
 
-            def test_something(self):
-                ...
-                do somethings
-                ...
+            self.fail_if(check_something_that_must_be_good(), "Something is wrong and we cannot continue")
 
-                result = passed
-                if not check_if_someting_is_ok:
-                    # Log a failure without exception
-                    result = self.fail("Someting is not OK", False)
+            # Result will be False if the expressing is True, meaning a failure.
+            result = self.fail_if(check_if_something_is_ok(), "Something is not OK, but we continue", False)
 
-                ...
-                do some other stuff
-                ...
+            ...
+            do some other stuff
+            ...
 
-                # return whether we passed or failed
-                return result
-
-* **fail_if( *expression*, *error_message*, *raise_exception=True* ):**
-
-  If the expression evaluates to :code:`True`, an error message is logged and exception is raised by default.
-  When the exception is raised, the test suite stops and is reported as failed.
-
-  Setting the :code:`raise_exception` to False, does not raise an exception and the test suite continues.
-  The fail_if method returns :code:`False` if the expression is :code:`True`.
-
-  .. code-block:: python
-
-      class MyTestSuite(lily_unit_test.TestSuite):
-
-            def test_something(self):
-                self.fail_if(my_string != "Is this OK?", "The string is not OK")
-
-                # Result will be False if the expressing is True, meaning a failure
-                result = self.fail_if(my_string != "Is this OK?", "The string is not OK", False)
-
-                # return whether we passed or failed
-                return result
+            # Return whether we passed or failed.
+            return result
