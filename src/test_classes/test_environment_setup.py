@@ -19,8 +19,10 @@ class TestEnvironmentSetup(lily_unit_test.TestSuite):
             for item in os.listdir(report_path):
                 full_path = os.path.join(report_path, item)
                 if os.path.isfile(full_path):
-                    self.log.debug("Remove file: {}".format(full_path))
-                    os.remove(full_path)
+                    # Do not delete release reports
+                    if not (item.endswith(".html") and "_V" in item):
+                        self.log.debug("Remove file: {}".format(full_path))
+                        os.remove(full_path)
                 elif os.path.isdir(full_path):
                     self.log.debug("Remove folder: {}".format(full_path))
                     shutil.rmtree(full_path)
@@ -33,7 +35,6 @@ class TestEnvironmentSetup(lily_unit_test.TestSuite):
 
 if __name__ == "__main__":
 
-    test_report_path = os.path.join(os.path.dirname(lily_unit_test.__file__),
-                                    lily_unit_test.TestSettings.REPORT_FOLDER_NAME)
+    test_report_path = os.path.abspath(os.path.join("../../", lily_unit_test.TestSettings.REPORT_FOLDER_NAME))
 
     TestEnvironmentSetup(test_report_path).run()

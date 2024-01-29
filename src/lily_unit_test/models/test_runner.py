@@ -208,7 +208,7 @@ class TestRunner(object):
 
 if __name__ == "__main__":
 
-    from lily_unit_test import test_classes
+    import test_classes
 
     test_options = {
         "create_html_report": True,

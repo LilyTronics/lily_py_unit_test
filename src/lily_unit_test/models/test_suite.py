@@ -186,8 +186,8 @@ class TestSuite(object):
 if __name__ == "__main__":
 
     import os
+    import test_classes
 
-    from lily_unit_test import test_classes
     from lily_unit_test.models.test_runner import TestRunner
 
     TestRunner.run(os.path.dirname(test_classes.__file__))
