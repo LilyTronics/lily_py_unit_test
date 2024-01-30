@@ -9,8 +9,7 @@ This package has the following features:
 - Single page HTML report: `test report latest release <https://htmlpreview.github.io/?https://github.com/LilyTronics/lily-py-unit-test/blob/main/lily_unit_test_reports/20240130_073058_Test_Report_V1.8.1.html>`_.
 - Text log file of every test suit that was executed.
 
-| The source code is available on `GitHub <https://github.com/LilyTronics/lily-py-unit-test>`_.
-| The package is available on `PyPi <https://pypi.org/project/lily-unit-test>`_.
+The package is available on `PyPi <https://pypi.org/project/lily-unit-test>`_.
 
 Installation
 ------------
@@ -43,13 +42,11 @@ The following example shows a basic test suite for your python code:
     # Simply make a sub class of the lily unit test test suite
     class MyTestSuite(lily_unit_test.TestSuite):
 
-
         def test_add_one(self):
-            assert MyClass.add_one(3) == 4, "Wrong return value"
-
+            assert add_one(3) == 4, "Wrong return value"
 
         def test_add_two(self):
-            assert MyClass.add_two(3) == 5, "Wrong return value"
+            assert add_two(3) == 5, "Wrong return value"
 
 
     if __name__ == "__main__":
@@ -79,7 +76,8 @@ Run the test runner to run all test suites in a folder:
 
 The test runner scans the folder recursively for Python files containing a test suite class.
 
-More detailed information can be found in the `documentation on Read the Docs <https://lily-py-unit-test.readthedocs.io>`_.
+| More detailed information can be found in the `documentation on Read the Docs <https://lily-py-unit-test.readthedocs.io>`_.
+| The source code is available on `GitHub <https://github.com/LilyTronics/lily-py-unit-test>`_.
 
 .. image:: https://readthedocs.org/projects/lily-py-unit-test/badge/?version=latest
     :target: https://lily-py-unit-test.readthedocs.io/en/latest/?badge=latest
