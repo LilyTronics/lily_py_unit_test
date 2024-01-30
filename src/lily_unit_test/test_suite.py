@@ -164,6 +164,40 @@ class TestSuite(object):
         :param error_message: the error message that should be written to the logger.
         :param raise_exception: if True, an exception is raised and the test suit will stop.
         :return: False
+
+        The fail method logs an error message and raises an exception.
+        When the exception is raised, the test suite stops and is reported as failed.
+        Setting the :code:`raise_exception` to False, does not raise an exception and the test suite continues.
+        Note that not raising the exception, does not make the test suite fail.
+        The fail method always returns :code:`False`. The return value can be used to make the test suite fail.
+
+        .. code-block:: python
+
+            import lily_unit_test
+
+            class MyTestSuite(lily_unit_test.TestSuite):
+
+                def test_something(self):
+
+                    # do some things
+
+                    # In case something is wrong, and we cannot continue.
+                    if not check_something_that_must_be_good():
+                        # Log a failure with exception, this will make the test suite fail.
+                        self.fail("Something is wrong, and we cannot continue")
+
+                    # In case something is wrong, and we still can continue.
+                    result = passed
+                    if not check_if_something_is_ok():
+                        # Log a failure without exception, this will not make the test suite fail.
+                        # To make it fail, we use the result value and return it later when we are done.
+                        result = self.fail("Something is not OK, but we continue", False)
+
+                    # do some other stuff
+
+                    # Return whether we passed or failed
+                    return result
+
         """
         self.log.error(error_message)
         if raise_exception:
@@ -178,6 +212,33 @@ class TestSuite(object):
         :param error_message: the error message that should be written to the logger.
         :param raise_exception: if True, an exception is raised and the test suit will stop.
         :return: False in case of a failure
+
+        Same as :code:`fail()` but evaluates an expression first. If the expression evaluates to :code:`True`,
+        the :code:`fail()` method is executed with the given parameters.
+
+        The fail_if method returns :code:`False` if the expression is :code:`True`.
+        The return value can be used to make the test suite fail.
+
+        .. code-block:: python
+
+            class MyTestSuite(lily_unit_test.TestSuite):
+
+                def test_something(self):
+
+                    # do some things
+
+                    self.fail_if(not check_something_that_must_be_good(),
+                                 "Something is wrong and we cannot continue")
+
+                    # Result will be False if the expressing is True, meaning a failure.
+                    result = self.fail_if(not check_if_something_is_ok(),
+                                          "Something is not OK, but we continue", False)
+
+                    # do some other stuff
+
+                    # Return whether we passed or failed.
+                    return result
+
         """
         if expression:
             self.fail(error_message, raise_exception)
@@ -211,36 +272,29 @@ class TestSuite(object):
 
             class MyTestSuite(liy_unit_test.TestSuite):
 
-                def back_ground_job(some_parameter)
-                    ...
-                    do some time-consuming stuff in the background
-                    ...
+                def back_ground_job(self, some_parameter):
+
+                    # do some time-consuming stuff in the background
+
 
                 def test_something(self):
                     # Start our background job
                     t = self.start_thread(self.back_ground_job, (parameter_value, ))
 
-                    ...
-                    Do some other stuff while the job is running
-                    ...
+                    # do some other stuff while the job is running
 
                     # Check if our job is running
                     if t.is_alive():
                         self.log.debug("The job is still running")
 
-                    # Wait for the job to finish, check every 0.5 seconds with a timeout of 30 seconds
-                    timeout = 30
-                    while timeout > 0:
-                        if not t.is_alive():
-                            self.log.debug("The job is done")
-                            break
-                        self.sleep(0.5)
-                        timeout -= 0.5
+                    # Wait for the job to finish, with a timeout of 30 seconds and check every 0.5 seconds
+                    if self.wait_for(t.is_alive(), False, 30, 0.5):
+                        self.log.debug("The job is done")
                     else:
                         self.fail("The thread did not finish within 30 seconds.")
 
                     # Check result from the thread
-                    ...
+
 
         Note that if an exception is raised in the thread, the thread is ended, but the test suite does not fail.
         You need to check the result from the thread your self.

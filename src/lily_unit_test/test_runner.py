@@ -91,25 +91,85 @@ class TestRunner(object):
         ===================== ========================== =============================================
 
         Not all keys have to present, you can omit keys. For the missing keys, default values are used.
+        For test suite names, use their class names.
 
-        For test suite names, use their class names:
+        Example: using HTML reporting and skip the text log files:
 
         .. code-block:: python
 
-            import lily_unit_test
+            from lily_unit_test import TestRunner
 
-            class MyTestSuite(lily_unit_test.TestSuite):
-                ...
-                some test stuff
-                ...
+            options = {
+                # Creates a single HTML file with all the results
+                "create_html_report": True,
+
+                # Open the HTML report in the default browser when finished
+                "open_in_browser": True,
+
+                # Do not write log files, because we use the HTML report
+                "no_log_files": True
+            }
+            TestRunner.run(".", options)
+
+        Example: skipping test suites
+
+        .. code-block:: python
+
+            from lily_unit_test import TestRunner, TestSuite
+
+            class MyTestSuite(TestSuite):
+                # some test stuff
+
+            # options for the test runner:
+            options = {
+                "exclude_test_suites": ["MyTestSuite"]
+            }
+            TestRunner.run(".", options)
+
+        Example: running only one test suite
+
+        .. code-block:: python
+
+            from lily_unit_test import TestRunner, TestSuite
+
+            class MyTestSuite(TestSuite):
+                # some test stuff
 
             # options for the test runner:
             options = {
                 "include_test_suites": ["MyTestSuite"]
             }
-            # Run the test runner from the current folder with the given options
-            lily_unit_test.TestRunner.run(".", options)
+            TestRunner.run(".", options)
 
+        Example: run specific test suites first and last
+
+        .. code-block:: python
+
+            from lily_unit_test import TestRunner, TestSuite
+
+            class TestEnvironmentSetup(TestSuite):
+                # Set up our test environment using test methods
+
+            class TestEnvironmentCleanup(TestSuite):
+                # Clean up our test environment using test methods
+
+            options = {
+                "run_first": "TestEnvironmentSetup",
+                "run_last": "TestEnvironmentCleanup"
+            }
+            TestRunner.run(".", options)
+
+
+        Because the options are in a dictionary, they can be easily read from a JSON file.
+
+        .. code-block:: python
+
+            import json
+            from lily_unit_test import TestRunner
+
+            TestRunner.run(".", json.load(open("/path/to/json_file", "r")))
+
+        This makes it easy to automate tests using different configurations.
         """
         test_run_result = False
 
@@ -162,10 +222,14 @@ class TestRunner(object):
             for i, test_suite in enumerate(test_suites):
                 test_suite_name = test_suite.__name__
                 test_runner_log.empty_line()
+                test_runner_log.info('Run test suite: {}'.format(test_suite_name))
                 ts = test_suite(report_path)
                 result = ts.run()
                 if result is None or result:
                     n_test_suites_passed += 1
+                    test_runner_log.info('Test suite {}: PASSED'.format(test_suite_name))
+                else:
+                    test_runner_log.error('Test suite {}: FAILED'.format(test_suite_name))
 
                 report_id = report_name_format.format(i + 2, test_suite_name)
                 report_data[report_id] = ts.log.get_log_messages()

@@ -80,6 +80,7 @@ The test runner scans the folder recursively for Python files containing a test 
 | The source code is available on `GitHub <https://github.com/LilyTronics/lily-py-unit-test>`_.
 
 |
+
 .. image:: https://readthedocs.org/projects/lily-py-unit-test/badge/?version=latest
     :target: https://lily-py-unit-test.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status

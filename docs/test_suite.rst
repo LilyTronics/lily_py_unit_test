@@ -8,15 +8,15 @@ Each test case is defined as a method in the test suite.
 The method must start with :code:`test_`.
 These test methods are executed by the test suite run method.
 
-Preceding the test cases, an optional setup method is executed.
+Preceding the test methods, an optional setup method is executed.
 If the setup fails, execution is stopped.
-Following the test cases a teardown method will be executed,
-regardless whether the test cases passed or failed.
+Following the test methods a teardown method will be executed,
+regardless whether the test methods passed or failed.
 
 Test suite creation
 -------------------
 
-Creating a test suite is a simple as creating a subclass:
+Creating a test suite is as simple as creating a subclass:
 
 .. code-block:: python
 
@@ -25,7 +25,7 @@ Creating a test suite is a simple as creating a subclass:
     class MyTestSuite(lily_unit_test.TestSuite):
         ...
 
-Test cases are added using methods with the prefix: :code:`test_`:
+Test methods are added using methods with the prefix: :code:`test_`:
 
 .. code-block:: python
 
@@ -39,8 +39,8 @@ Test cases are added using methods with the prefix: :code:`test_`:
         def test_upload_image(self):
             ...
 
-In this case two test cases are defined.
-The tests are executed in the order as they are created, from top to bottom.
+In this case two test methods are defined.
+The test methods are executed in the order as they are created, from top to bottom.
 
 Running the test suite
 ----------------------
@@ -51,7 +51,7 @@ In order to make the test suite run properly, the test suite must be initialized
 
 .. code-block:: python
 
-    # Initialize test suite, the test suite does not have any parameters
+    # Initialize test suite, the test suite require any parameters
     ts = MyTestSuite()
     # Run the test suite
     ts.run()
@@ -91,13 +91,13 @@ The setup and teardown can be overridden in your test suite:
             self.connection.download_image(uri, filename)
 
         def teardown(self):
-            # In case the connection could not be created, the connection propery could still be None
+            # In case the connection could not be created, the connection property could still be None
             if self.connection is not None and self.connection.is_connected():
                 self.connection.close()
 
 In this hypothetical example, prior to all tests a connection to a server is created.
 In case this fails because of an exception, the execution stops and the test suite fails.
-In case the setup passes, the test cases will be executed.
+In case the setup passes, the test methods will be executed.
 Finally, the teardown is executed. The teardown closes the connection with the server.
 If in the hypothetical case, the connection was not established in the setup (failed for some reason),
 closing a not established connection can cause an exception.
@@ -106,12 +106,12 @@ The test suite will fail if the teardown fails because of an exception.
 Making test suites pass or fail
 -------------------------------
 
-A test case method or setup method is passed by the following conditions:
+A test method or setup method is passed by the following conditions:
 
 * There were no exceptions or asserts.
-* The return value is None or True.
+* The return value is None (default return value of a method) or True.
 
-A test case method or setup method is failed by the following conditions:
+A test method or setup method is failed by the following conditions:
 
 * An exception or assert was raised
 * The return value is False
@@ -164,27 +164,28 @@ The logger can be accessed by the log attribute of the test suite:
     import lily_unit_test
 
     class MyTestSuite(lily_unit_test.TestSuite):
-        ...
-        some test stuff here
-        ...
 
+        def test_something(self):
+            # Write a log message
+            self.log.info("Start test something")
+            ...
+            some test stuff here
+            ...
+
+Before and after running th test suite, the logger is also available:
+
+.. code-block:: python
 
     # Initialize the test suite
     ts = MyTestSuite()
 
-    # Access the logger
-    # Write a message to the internal buffer and it will also shown on the standard output
-    ts.log.info("Log an info level message")
+    ts.log.info("This is a message before running the test suite")
 
-    print("This mesage will be written to the logger")
+    # Run the test suite
+    ts.run()
 
-    # Get a reference to the list with messages
-    messages = ts.log.get_log_messages()
+    ts.log.info("This is a message after running the test suite")
 
-    # Get a copy of the list with messages
-    messages = ts.log.get_log_messages().copy()
-
-Note that you do not need to run the test suite to use the logger.
 
 Below some examples of log messages.
 
@@ -214,6 +215,20 @@ Below some examples of log messages.
         return self.connection.is_connected()
 
 Note that logging an error message NOT automatically makes the test fail.
+
+It is possible to get the messages from the logger:
+
+.. code-block:: python
+
+    ts = MyTestSuite()
+    ts.run()
+
+    # Get the log messages
+    messages = ts.log.get_log_messages()
+    # Write to file
+    with open("test_report.txt", "w") as fp:
+        # The messages is a list, we can write the list in one time
+        fp.writelines(messages)
 
 See the logger API documentation for more details.
 
@@ -276,77 +291,10 @@ The log messages will show this:
     2024-01-05 19:39:46.530 | ERROR  | Test suite passed, but a failure was expected because classification is set to 'FAIL'
     2024-01-05 19:39:46.530 | ERROR  | Test suite TestSuiteClassification: FAILED
 
-Test suite methods
+Test suite API
 ------------------
-
-The test suite has some build-in methods that can be used in the test methods.
 
 .. currentmodule:: lily_unit_test
 
-.. automethod:: TestSuite.fail
-    :no-index:
-
-The fail methods logs an error message and raises an exception. By default, an exception is raised.
-When the exception is raised, the test suite stops and is reported as failed.
-Setting the :code:`raise_exception` to False, does not raise an exception and the test suite continues.
-The fail method always returns :code:`False`.
-
-.. code-block:: python
-
-    class MyTestSuite(lily_unit_test.TestSuite):
-
-        def test_something(self):
-            ...
-            do some things
-            ...
-
-            # In case something is wrong and we cannot continue.
-            if not check_something_that_must_be_good():
-                # Log a failure with exception, this will make the test suite fail.
-                self.fail("Something is wrong and we cannot continue")
-
-            # In case something is wrong and we still can continue.
-            result = passed
-            if not check_if_something_is_ok():
-                # Log a failure without exception, this will not make the test suite fail.
-                # To make it fail, we use the result value and return it later when we are done.
-                result = self.fail("Something is not OK, but we continue", False)
-
-            ...
-            do some other stuff
-            ...
-
-            # Return whether we passed or failed
-            return result
-
-.. automethod:: TestSuite.fail_if
-    :no-index:
-
-If the expression evaluates to :code:`True`, an error message is logged and exception is raised by default.
-When the exception is raised, the test suite stops and is reported as failed.
-Setting the :code:`raise_exception` to False, does not raise an exception and the test suite continues.
-The fail_if method returns :code:`False` if the expression is :code:`True`.
-
-Let's rewrite the test method in the previous example, but now using :code:`fail_if`.
-The test looks more simpler now.
-
-.. code-block:: python
-
-    class MyTestSuite(lily_unit_test.TestSuite):
-
-        def test_something(self):
-            ...
-            do some things
-            ...
-
-            self.fail_if(check_something_that_must_be_good(), "Something is wrong and we cannot continue")
-
-            # Result will be False if the expressing is True, meaning a failure.
-            result = self.fail_if(check_if_something_is_ok(), "Something is not OK, but we continue", False)
-
-            ...
-            do some other stuff
-            ...
-
-            # Return whether we passed or failed.
-            return result
+.. autoclass:: TestSuite
+    :members: run, get_report_path, setup, teardown, fail, fail_if, sleep, start_thread, wait_for
