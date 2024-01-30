@@ -9,6 +9,8 @@
 
 # Test reports
 **/lily_unit_test_reports/*
+# Do not ignore release test reports (have a version number)
+!**/lily_unit_test_reports/*_V*.html
 
 # Distribution output
 /dist/*
