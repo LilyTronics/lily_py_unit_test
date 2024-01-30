@@ -76,6 +76,9 @@ class Logger(object):
             sys.stdout = self._StdLogger(self, self.TYPE_STDOUT)
             sys.stderr = self._StdLogger(self, self.TYPE_STDERR)
 
+    def log_to_stdout(self, enable):
+        self._log_to_stdout = enable
+
     def get_log_messages(self):
         """
         Returns a reference to the log messages buffer.
