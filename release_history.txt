@@ -1,6 +1,7 @@
 This file contains all the release notes
 
-* 202301: V1.8.1
+* 202301: V1.8.2
+  * fixed a bug in log messages
   * documentation available on Read the Docs
   * add new methods to the test suite:
     * sleep
