@@ -1,5 +1,12 @@
 This file contains all the release notes
 
+* 202301: V1.8.0
+  * documentation available on Read the Docs
+  * add new methods to the test suite:
+    * sleep
+    * start thread
+    * wait for
+
 * 202301: V1.7.0
   * HTML entities in log messages are now properly escaped in the HTML report.
 
