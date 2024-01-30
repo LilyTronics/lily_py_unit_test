@@ -28,7 +28,7 @@ class TestRunner(object):
     def _populate_test_suites(cls, test_suites_path):
         sys.path.append(test_suites_path)
 
-        test_suites = []
+        found_test_suites = []
         for current_folder, sub_folders, filenames in os.walk(test_suites_path):
             sub_folders.sort()
             filenames.sort()
@@ -41,9 +41,9 @@ class TestRunner(object):
                     if inspect.isclass(attribute):
                         classes = inspect.getmro(attribute)
                         if len(classes) > 2 and TestSuite in classes:
-                            test_suites.append(attribute)
+                            found_test_suites.append(attribute)
 
-        return test_suites
+        return found_test_suites
 
     @classmethod
     def _write_log_messages_to_file(cls, report_path, time_stamp, filename, logger):
@@ -53,6 +53,12 @@ class TestRunner(object):
 
         with open(os.path.join(str(output_path), filename), "w") as fp:
             fp.writelines(map(lambda x: "{}\n".format(x), logger.get_log_messages()))
+
+    @classmethod
+    def _log_empty_line(cls, logger):
+        logger.log_to_stdout(True)
+        logger.empty_line()
+        logger.log_to_stdout(False)
 
     ##########
     # Public #
@@ -185,43 +191,43 @@ class TestRunner(object):
         write_log_files = not options.get("no_log_files", False)
 
         report_data = {}
-        test_runner_log = Logger(False)
+        test_runner_log = Logger(False, False)
         time_stamp = datetime.now().strftime(TestSettings.REPORT_TIME_STAMP_FORMAT)
 
-        test_suites = cls._populate_test_suites(test_suites_path)
+        test_suites_to_run = cls._populate_test_suites(test_suites_path)
 
         include_filter = options.get("include_test_suites", [])
         if len(include_filter) > 0:
-            test_suites = list(filter(lambda x: x.__name__ in include_filter, test_suites))
+            test_suites_to_run = list(filter(lambda x: x.__name__ in include_filter, test_suites_to_run))
 
         exclude_filter = options.get("exclude_test_suites", [])
         if len(exclude_filter) > 0:
-            test_suites = list(filter(lambda x: x.__name__ not in exclude_filter, test_suites))
+            test_suites_to_run = list(filter(lambda x: x.__name__ not in exclude_filter, test_suites_to_run))
 
         run_first = options.get("run_first", None)
         if run_first is not None and run_first != "":
-            matches = list(filter(lambda x: x.__name__ == run_first, test_suites))
+            matches = list(filter(lambda x: x.__name__ == run_first, test_suites_to_run))
             assert len(matches) == 1, "Test suite to run first with name '{}' not found".format(run_first)
-            test_suites.remove(matches[0])
-            test_suites.insert(0, matches[0])
+            test_suites_to_run.remove(matches[0])
+            test_suites_to_run.insert(0, matches[0])
 
         run_last = options.get("run_last", None)
         if run_last is not None and run_last != "":
-            matches = list(filter(lambda x: x.__name__ == run_last, test_suites))
+            matches = list(filter(lambda x: x.__name__ == run_last, test_suites_to_run))
             assert len(matches) == 1, "Test suite to run last with name '{}' not found".format(run_last)
-            test_suites.remove(matches[0])
-            test_suites.append(matches[0])
+            test_suites_to_run.remove(matches[0])
+            test_suites_to_run.append(matches[0])
 
-        n_test_suites = len(test_suites)
+        n_test_suites = len(test_suites_to_run)
         n_digits = len(str(n_test_suites))
         report_name_format = "{{:0{}d}}_{{}}".format(n_digits)
         if n_test_suites > 0:
             n_test_suites_passed = 0
             test_runner_log.info("Run {} test suites from folder: {}".format(n_test_suites, test_suites_path))
 
-            for i, test_suite in enumerate(test_suites):
+            for i, test_suite in enumerate(test_suites_to_run):
                 test_suite_name = test_suite.__name__
-                test_runner_log.empty_line()
+                cls._log_empty_line(test_runner_log)
                 test_runner_log.info('Run test suite: {}'.format(test_suite_name))
                 ts = test_suite(report_path)
                 result = ts.run()
@@ -236,7 +242,8 @@ class TestRunner(object):
                 if write_log_files:
                     cls._write_log_messages_to_file(report_path, time_stamp, "{}.txt".format(report_id), ts.log)
 
-            test_runner_log.empty_line()
+            cls._log_empty_line(test_runner_log)
+
             ratio = 100 * n_test_suites_passed / n_test_suites
             test_runner_log.info("{} of {} test suites passed ({:.1f}%)".format(
                                  n_test_suites_passed, n_test_suites, ratio))
