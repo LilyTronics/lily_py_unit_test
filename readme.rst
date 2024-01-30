@@ -1,12 +1,12 @@
 Lily unit test package for Python
 =================================
 
-This package aims to be a ful alternative to the Python's build in unittest package.
+This package aims to be a full alternative to the Python's build in unittest package.
 This package has the following features:
 
 - Test suite class with various build-in functions.
 - Test runner that scans all Python files in your project for test suites and executes them.
-- Single page HTML report: `Test Report V1.8.0 <https://htmlpreview.github.io/?https://github.com/LilyTronics/lily-py-unit-test/blob/main/lily_unit_test_reports/20240130_073058_Test_Report_V1.8.0.html>`_.
+- Single page HTML report: `Test Report V1.8.0 <https://htmlpreview.github.io/?https://github.com/LilyTronics/lily-py-unit-test/blob/main/lily_unit_test_reports/20240130_073058_Test_Report_V1.8.1.html>`_.
 - Text log file of every test suit that was executed.
 
 | The source code is available on `GitHub <https://github.com/LilyTronics/lily-py-unit-test>`_.
