@@ -15,7 +15,6 @@ if not os.path.isdir(report_folder):
 options = {
     "report_folder": report_folder,
     "create_html_report": True,
-    "no_log_files": True,
     "open_in_browser": True,
     "run_first": "TestEnvironmentSetup",
     "run_last": "TestEnvironmentCleanup"
