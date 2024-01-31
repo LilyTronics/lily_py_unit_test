@@ -86,7 +86,8 @@ class TestSuite(object):
                         # Start with result None. Test case can set the result to False by using a fail method
                         self._set_result(None)
                         method_result = getattr(self, test_method)()
-                        if self._get_result() is None and method_result is None or method_result:
+                        if (not self.log.has_stderr_messages() and self._get_result() is None and
+                                method_result is None or method_result):
                             n_passed += 1
                             self.log.info("Test case {}: PASSED".format(test_case_name))
                         else:
@@ -237,7 +238,7 @@ class TestSuite(object):
                     # do some things
 
                     self.fail_if(not check_something_that_must_be_good(),
-                                 "Something is wrong and we cannot continue")
+                                 "Something is wrong, and we cannot continue")
 
                     self.fail_if(not check_if_something_is_ok(),
                                  "Something is not OK, but we continue", False)
@@ -253,7 +254,7 @@ class TestSuite(object):
         """
         Simple wrapper for time.sleep()
 
-        :param sleep_time: time to sleep in seconds (can be float)
+        :param sleep_time: time to sleep in seconds (can be fractional)
         """
         time.sleep(sleep_time)
 
@@ -263,7 +264,7 @@ class TestSuite(object):
         Starts a function (target) in a separate thread with the given arguments.
 
         :param target: function to start as a thread
-        :param args: arguments to pass to the thread (see Python threading for details)
+        :param args: tuple with arguments to pass to the thread
         :return: a reference to the started thread
 
         The thread is started as a daemon thread, meaning that the thread will be terminated when test execution stops.
@@ -299,13 +300,10 @@ class TestSuite(object):
                     # Check result from the thread
 
 
-        Note that if an exception is raised in the thread, the thread is ended, but the test suite does not fail.
-        You need to check the result from the thread your self.
+        Note that if an exception is raised in the thread, the thread is ended. The test suite will report a failure.
 
         Note that the thread may be hanging for some reason and does not stop. When checking if the thread is finished,
         a timeout should be included.
-
-        TODO: make the test suite fail if there are exceptions raise in the thread
         """
         t = threading.Thread(target=target, args=args)
         t.daemon = True
