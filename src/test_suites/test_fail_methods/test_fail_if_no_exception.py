@@ -11,7 +11,7 @@ class TestFailIfNoException(TestSuite):
     CLASSIFICATION = Classification.FAIL
 
     def test_fail_if(self):
-        return self.fail_if(True, "This should not generate an exception, but failing using the return value", False)
+        self.fail_if(True, "This should not generate an exception, but should fail", False)
 
 
 if __name__ == "__main__":
