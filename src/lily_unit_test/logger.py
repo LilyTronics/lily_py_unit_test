@@ -69,6 +69,8 @@ class Logger(object):
         self._log_to_stdout = log_to_stdout
         self._log_messages = []
         self._output = ""
+        self._has_stderr_messages = False
+        self._lock = threading.RLock()
 
         self._orgStdout = sys.stdout
         self._orgStderr = sys.stderr
@@ -90,6 +92,12 @@ class Logger(object):
         | This will return a new list with a copy of all the log messages at that moment.
         """
         return self._log_messages
+
+    def has_stderr_messages(self):
+        """
+        :return: True if a message from the STDERR handler was reported.
+        """
+        return self._has_stderr_messages
 
     def shutdown(self):
         """
@@ -137,21 +145,29 @@ class Logger(object):
         :param message_type: a string indicating the message type (see table above).
         :param message_text: the message to write to the logger.
         """
-        if message_type == self.TYPE_EMPTY_LINE:
-            self._log_messages.append("")
-            if self._log_to_stdout:
-                self._orgStdout.write("\n")
+        self._lock.acquire()
+        try:
+            messages_to_write = []
+            if message_type == self.TYPE_EMPTY_LINE:
+                messages_to_write.append("")
+            else:
+                if message_type == self.TYPE_STDERR:
+                    self._has_stderr_messages = True
 
-        else:
-            timestamp = datetime.now().strftime(self.TIME_STAMP_FORMAT)[:-3]
-            self._output += message_text
-            while "\n" in self._output:
-                index = self._output.find("\n")
-                line = self._LOG_FORMAT.format(timestamp, message_type, self._output[:index])
-                self._output = self._output[index + 1:]
-                self._log_messages.append(line)
+                timestamp = datetime.now().strftime(self.TIME_STAMP_FORMAT)[:-3]
+                self._output += message_text
+                while "\n" in self._output:
+                    index = self._output.find("\n")
+                    line = self._LOG_FORMAT.format(timestamp, message_type, self._output[:index])
+                    self._output = self._output[index + 1:]
+                    messages_to_write.append(line)
+
+            for message in messages_to_write:
+                self._log_messages.append(message)
                 if self._log_to_stdout:
-                    self._orgStdout.write("{}\n".format(line))
+                    self._orgStdout.write("{}\n".format(message))
+        finally:
+            self._lock.release()
 
 
 if __name__ == "__main__":
@@ -169,10 +185,18 @@ if __name__ == "__main__":
     test_logger.debug("This is a debug message.")
     test_logger.error("This is an error message.")
 
+    test_logger.empty_line()
+
     print("This is a stdout message.")
     print("This is a\nmulti line message.")
 
+    test_logger.info("STDERR message: {}".format(test_logger.has_stderr_messages()))
+    test_logger.empty_line()
+
     _generate_error()
+
+    test_logger.empty_line()
+    test_logger.info("STDERR message: {}".format(test_logger.has_stderr_messages()))
 
     test_logger.shutdown()
 
