@@ -1,8 +1,13 @@
 This file contains all the release notes
 
+* 202301: V1.9.0
+  * fixed a bug in log messages (really fixed now).
+  * test suite fails when using fail methods without raising an exception.
+  * test suite fails when messages were reported from the standard error handler.
+
 * 202301: V1.8.2
-  * fixed a bug in log messages
-  * documentation available on Read the Docs
+  * fixed a bug in log messages.
+  * documentation available on Read the Docs.
   * add new methods to the test suite:
     * sleep
     * start thread
@@ -12,25 +17,25 @@ This file contains all the release notes
   * HTML entities in log messages are now properly escaped in the HTML report.
 
 * 202301: V1.6.0
-  * test runner has options to run a specific test suite first or last
-  * test suit holds the report folder name
+  * test runner has options to run a specific test suite first or last.
+  * test suit holds the report folder name.
 
 * 202301: V1.5.0
-  * test suite has an option to log traceback in case of an exception
+  * test suite has an option to log traceback in case of an exception.
 
 * 202301: V1.4.0
-  * test suite has fail methods for making tests fail
-  * test methods are now executed in the order they are created (not alphabetical)
+  * test suite has fail methods for making tests fail.
+  * test methods are now executed in the order they are created (not alphabetical).
 
 * 202301: V1.3.0
   * test runner can have a classification for handling known issues.
 
 * 202301: V1.2.0
   * test runner run method returns True when passed and False when failed.
-  * fixed package name in distribution
+  * fixed package name in distribution.
 
 * 202312: V1.1.0
-  * fix issue with writing HTML report if path does not exist
+  * fix issue with writing HTML report if path does not exist.
 
 * 202312: V1.0.0
-  * official release
+  * official release.
