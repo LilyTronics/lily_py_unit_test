@@ -26,6 +26,23 @@ class TestSuite(object):
     def __init__(self, report_path=None):
         self._report_path = report_path
         self.log = Logger()
+        self._test_suite_result = None
+        self._lock = threading.RLock()
+
+    def _set_result(self, result):
+        self._lock.acquire()
+        try:
+            self._test_suite_result = result
+        finally:
+            self._lock.release()
+
+    def _get_result(self):
+        self._lock.acquire()
+        try:
+            result = self._test_suite_result
+        finally:
+            self._lock.release()
+        return result
 
     def run(self, log_traceback=False):
         """
@@ -40,7 +57,7 @@ class TestSuite(object):
         test_suite_name = self.__class__.__name__
         self.log.info("Run test suite: {}".format(test_suite_name))
 
-        test_suite_result = False
+        self._set_result(None)
         try:
             test_methods = list(filter(lambda x: x.startswith("test_"), list(vars(self.__class__).keys())))
             n_tests = len(test_methods)
@@ -51,24 +68,25 @@ class TestSuite(object):
                 setup_result = self.setup()
                 if setup_result is not None and not setup_result:
                     self.log.error("Test suite {}: FAILED: setup failed".format(test_suite_name))
-                    setup_result = False
-                else:
-                    setup_result = True
+                    self._set_result(False)
             except Exception as e:
                 self.log.error("Test suite {}: FAILED by exception in setup\nException: {}".format(test_suite_name, e))
                 if log_traceback:
                     self.log.error(traceback.format_exc().strip())
-                setup_result = False
+                self._set_result(False)
 
-            if setup_result:
+            # After setup, result is either None or False
+            if self._get_result() is None:
                 n_passed = 0
                 # Run the test methods
                 for test_method in test_methods:
                     test_case_name = "{}.{}".format(test_suite_name, test_method)
                     self.log.info("Run test case: {}".format(test_case_name))
                     try:
+                        # Start with result None. Test case can set the result to False by using a fail method
+                        self._set_result(None)
                         method_result = getattr(self, test_method)()
-                        if method_result is None or method_result:
+                        if self._get_result() is None and method_result is None or method_result:
                             n_passed += 1
                             self.log.info("Test case {}: PASSED".format(test_case_name))
                         else:
@@ -83,7 +101,9 @@ class TestSuite(object):
                 self.log.info("Test suite {}: {} of {} test cases passed ({:.1f}%)".format(
                               test_suite_name, n_passed, n_tests, ratio))
 
-                test_suite_result = n_passed == n_tests
+                self._set_result(n_passed == n_tests)
+
+            assert self._get_result() is not None, "Unexpected test result None"
 
             # Run the teardown
             try:
@@ -91,33 +111,33 @@ class TestSuite(object):
             except Exception as e:
                 self.log.error("Test suite {}: FAILED by exception in teardown\nException: {}".format(
                                test_suite_name, e))
-                test_suite_result = False
+                self._set_result(False)
 
         except Exception as e:
             self.log.error("Test suite {}: FAILED by exception\nException: {}".format(test_suite_name, e))
             if log_traceback:
                 self.log.error(traceback.format_exc().strip())
-            test_suite_result = False
+            self._set_result(False)
 
         if self.CLASSIFICATION == Classification.FAIL:
             # We expect a failure
-            test_suite_result = not test_suite_result
-            if test_suite_result:
+            self._set_result(not self._get_result())
+            if self._get_result():
                 self.log.info("Test suite failed, but accepted because classification is set to 'FAIL'")
             else:
                 self.log.error("Test suite passed, but a failure was expected because classification is set to 'FAIL'")
         elif self.CLASSIFICATION != Classification.PASS:
             self.log.error("Test classification is not defined: '{}'".format(self.CLASSIFICATION))
-            test_suite_result = False
+            self._set_result(False)
 
-        if test_suite_result:
+        if self._get_result():
             self.log.info("Test suite {}: PASSED".format(test_suite_name))
         else:
             self.log.error("Test suite {}: FAILED".format(test_suite_name))
 
         self.log.shutdown()
 
-        return test_suite_result
+        return self._get_result()
 
     def get_report_path(self):
         """
@@ -163,13 +183,11 @@ class TestSuite(object):
 
         :param error_message: the error message that should be written to the logger.
         :param raise_exception: if True, an exception is raised and the test suit will stop.
-        :return: False
 
         The fail method logs an error message and raises an exception.
         When the exception is raised, the test suite stops and is reported as failed.
         Setting the :code:`raise_exception` to False, does not raise an exception and the test suite continues.
-        Note that not raising the exception, does not make the test suite fail.
-        The fail method always returns :code:`False`. The return value can be used to make the test suite fail.
+        Even though the test suite continues it will fail.
 
         .. code-block:: python
 
@@ -183,26 +201,21 @@ class TestSuite(object):
 
                     # In case something is wrong, and we cannot continue.
                     if not check_something_that_must_be_good():
-                        # Log a failure with exception, this will make the test suite fail.
+                        # Log a failure with exception, this will make the test suite fail and stop.
                         self.fail("Something is wrong, and we cannot continue")
 
                     # In case something is wrong, and we still can continue.
-                    result = passed
                     if not check_if_something_is_ok():
-                        # Log a failure without exception, this will not make the test suite fail.
-                        # To make it fail, we use the result value and return it later when we are done.
-                        result = self.fail("Something is not OK, but we continue", False)
+                        # Log a failure without exception, this will also make the test suite fail.
+                        self.fail("Something is not OK, but we continue", False)
 
                     # do some other stuff
-
-                    # Return whether we passed or failed
-                    return result
 
         """
         self.log.error(error_message)
         if raise_exception:
             raise Exception(error_message)
-        return False
+        self._set_result(False)
 
     def fail_if(self, expression, error_message, raise_exception=True):
         """
@@ -211,13 +224,9 @@ class TestSuite(object):
         :param expression: the expression that should be evaluated.
         :param error_message: the error message that should be written to the logger.
         :param raise_exception: if True, an exception is raised and the test suit will stop.
-        :return: False in case of a failure
 
         Same as :code:`fail()` but evaluates an expression first. If the expression evaluates to :code:`True`,
         the :code:`fail()` method is executed with the given parameters.
-
-        The fail_if method returns :code:`False` if the expression is :code:`True`.
-        The return value can be used to make the test suite fail.
 
         .. code-block:: python
 
@@ -230,20 +239,14 @@ class TestSuite(object):
                     self.fail_if(not check_something_that_must_be_good(),
                                  "Something is wrong and we cannot continue")
 
-                    # Result will be False if the expressing is True, meaning a failure.
-                    result = self.fail_if(not check_if_something_is_ok(),
-                                          "Something is not OK, but we continue", False)
+                    self.fail_if(not check_if_something_is_ok(),
+                                 "Something is not OK, but we continue", False)
 
                     # do some other stuff
-
-                    # Return whether we passed or failed.
-                    return result
 
         """
         if expression:
             self.fail(error_message, raise_exception)
-
-        return not expression
 
     @staticmethod
     def sleep(sleep_time):
@@ -301,6 +304,8 @@ class TestSuite(object):
 
         Note that the thread may be hanging for some reason and does not stop. When checking if the thread is finished,
         a timeout should be included.
+
+        TODO: make the test suite fail if there are exceptions raise in the thread
         """
         t = threading.Thread(target=target, args=args)
         t.daemon = True
@@ -356,9 +361,6 @@ class TestSuite(object):
 
 if __name__ == "__main__":
 
-    import os
-    import test_suites
+    from src.run_tests import run_unit_tests
 
-    from lily_unit_test.test_runner import TestRunner
-
-    TestRunner.run(os.path.dirname(test_suites.__file__))
+    run_unit_tests()
