@@ -54,12 +54,6 @@ class TestRunner(object):
         with open(os.path.join(str(output_path), filename), "w") as fp:
             fp.writelines(map(lambda x: "{}\n".format(x), logger.get_log_messages()))
 
-    @classmethod
-    def _log_empty_line(cls, logger):
-        logger.log_to_stdout(True)
-        logger.empty_line()
-        logger.log_to_stdout(False)
-
     ##########
     # Public #
     ##########
@@ -191,7 +185,7 @@ class TestRunner(object):
         write_log_files = not options.get("no_log_files", False)
 
         report_data = {}
-        test_runner_log = Logger(False, False)
+        test_runner_log = Logger(False)
         time_stamp = datetime.now().strftime(TestSettings.REPORT_TIME_STAMP_FORMAT)
 
         test_suites_to_run = cls._populate_test_suites(test_suites_path)
@@ -227,22 +221,29 @@ class TestRunner(object):
 
             for i, test_suite in enumerate(test_suites_to_run):
                 test_suite_name = test_suite.__name__
-                cls._log_empty_line(test_runner_log)
+                test_runner_log.empty_line()
+                test_runner_log.log_to_stdout(False)
                 test_runner_log.info('Run test suite: {}'.format(test_suite_name))
+                test_runner_log.log_to_stdout(True)
                 ts = test_suite(report_path)
                 result = ts.run()
+                result_text = "FAILED"
+                log_method = test_runner_log.error
                 if result is None or result:
                     n_test_suites_passed += 1
-                    test_runner_log.info('Test suite {}: PASSED'.format(test_suite_name))
-                else:
-                    test_runner_log.error('Test suite {}: FAILED'.format(test_suite_name))
+                    result_text = "PASSED"
+                    log_method = test_runner_log.info
+
+                test_runner_log.log_to_stdout(False)
+                log_method('Test suite {}: {}'.format(test_suite_name, result_text))
+                test_runner_log.log_to_stdout(True)
 
                 report_id = report_name_format.format(i + 2, test_suite_name)
                 report_data[report_id] = ts.log.get_log_messages()
                 if write_log_files:
                     cls._write_log_messages_to_file(report_path, time_stamp, "{}.txt".format(report_id), ts.log)
 
-            cls._log_empty_line(test_runner_log)
+            test_runner_log.empty_line()
 
             ratio = 100 * n_test_suites_passed / n_test_suites
             test_runner_log.info("{} of {} test suites passed ({:.1f}%)".format(
@@ -279,15 +280,6 @@ class TestRunner(object):
 
 if __name__ == "__main__":
 
-    import test_suites
+    from src.run_tests import run_unit_tests
 
-    test_options = {
-        "create_html_report": True,
-        "open_in_browser": True,
-        "no_log_files": True,
-        "run_first": "TestEnvironmentSetup",
-        "run_last": "TestEnvironmentCleanup"
-    }
-
-    test_result = TestRunner.run(os.path.dirname(test_suites.__file__), test_options)
-    print("Test runner result:", test_result)
+    run_unit_tests()
