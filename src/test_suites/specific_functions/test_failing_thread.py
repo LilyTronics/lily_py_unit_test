@@ -6,7 +6,7 @@ from lily_unit_test.classification import Classification
 from lily_unit_test.test_suite import TestSuite
 
 
-class TestThreading(TestSuite):
+class TestFailingThread(TestSuite):
 
     CLASSIFICATION = Classification.FAIL
 
@@ -15,7 +15,7 @@ class TestThreading(TestSuite):
         # This will make the thread fail and the test suite should report a failure
         _a = 1 / 0
 
-    def test_threading(self):
+    def test_failing_thread(self):
         t = self.start_thread(self.thread)
         self.fail_if(not t.is_alive(), "The thread is not running")
 
@@ -25,4 +25,4 @@ class TestThreading(TestSuite):
 
 if __name__ == "__main__":
 
-    TestThreading().run()
+    TestFailingThread().run()
