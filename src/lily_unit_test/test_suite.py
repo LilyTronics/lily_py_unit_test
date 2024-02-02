@@ -52,7 +52,7 @@ class TestSuite(object):
         :return: True when all tests are passed, False when one or more tests are failed.
 
         The run method creates a list of all methods starting with :code:`test_`. Before executing the test methods,
-        it executes the setup method. After executing the test methods, it executes the teardown.
+        it executes the setup method. After executing the test methods, it executes the teardown method.
         """
         test_suite_name = self.__class__.__name__
         self.log.info("Run test suite: {}".format(test_suite_name))
@@ -169,7 +169,7 @@ class TestSuite(object):
         The teardown method. This can be overridden in the test suite. This will be executed after running all test
         methods.
 
-        This method is always executed and if there is an exception raise in this method, the test suite is reported
+        This method is always executed and if there is an exception raised in this method, the test suite is reported
         as failed.
         """
         pass
@@ -183,12 +183,12 @@ class TestSuite(object):
         Make the test suite fail.
 
         :param error_message: the error message that should be written to the logger.
-        :param raise_exception: if True, an exception is raised and the test suit will stop.
+        :param raise_exception: if True, an exception is raised and the test suite will stop.
 
         The fail method logs an error message and raises an exception.
         When the exception is raised, the test suite stops and is reported as failed.
         Setting the :code:`raise_exception` to False, does not raise an exception and the test suite continues.
-        Even though the test suite continues it will fail.
+        Even though the test suite continues it is reported as failed.
 
         .. code-block:: python
 
@@ -207,7 +207,7 @@ class TestSuite(object):
 
                     # In case something is wrong, and we still can continue.
                     if not check_if_something_is_ok():
-                        # Log a failure without exception, this will also make the test suite fail.
+                        # Log a failure without exception, this will make the test suite fail.
                         self.fail("Something is not OK, but we continue", False)
 
                     # do some other stuff
@@ -224,7 +224,7 @@ class TestSuite(object):
 
         :param expression: the expression that should be evaluated.
         :param error_message: the error message that should be written to the logger.
-        :param raise_exception: if True, an exception is raised and the test suit will stop.
+        :param raise_exception: if True, an exception is raised and the test suite will stop.
 
         Same as :code:`fail()` but evaluates an expression first. If the expression evaluates to :code:`True`,
         the :code:`fail()` method is executed with the given parameters.
@@ -268,7 +268,7 @@ class TestSuite(object):
         :return: a reference to the started thread
 
         The thread is started as a daemon thread, meaning that the thread will be terminated when test execution stops.
-        The thread can be monitored by it's is_alive() method.
+        The thread can be monitored by the is_alive() method of the thread.
 
         .. code-block:: python
 
@@ -277,9 +277,7 @@ class TestSuite(object):
             class MyTestSuite(liy_unit_test.TestSuite):
 
                 def back_ground_job(self, some_parameter):
-
                     # do some time-consuming stuff in the background
-
 
                 def test_something(self):
                     # Start our background job
@@ -292,7 +290,7 @@ class TestSuite(object):
                         self.log.debug("The job is still running")
 
                     # Wait for the job to finish, with a timeout of 30 seconds and check every 0.5 seconds
-                    if self.wait_for(t.is_alive(), False, 30, 0.5):
+                    if self.wait_for(t.is_alive, False, 30, 0.5):
                         self.log.debug("The job is done")
                     else:
                         self.fail("The thread did not finish within 30 seconds.")
@@ -323,7 +321,7 @@ class TestSuite(object):
         :return: True when the expected result is met, False when the timer times out.
 
         This function only works with mutable variables or objects that can be called.
-        It does not work on immutable variable since they are not passed as reference.
+        It does not work on immutable variables since they are not passed as reference.
 
         .. code-block:: python
 
@@ -341,6 +339,7 @@ class TestSuite(object):
 
                 def test_wait_for_function(self):
                     # Check the outcome of a function, for example checking if a server is connected.
+                    # Note the missing '()' for the function, we want to pass a reference of the function.
                     result = self.wait_for(server.is_connected, True, 5, 0.1)
 
         """

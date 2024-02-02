@@ -1,17 +1,17 @@
-The Test Suite
+The test suite
 ==============
 
-This page describes more details about the Test Suite class.
+This page describes more details about the test suite class.
 
 The test suite class is the main class for running tests.
 Each test case is defined as a method in the test suite.
 The method must start with :code:`test_`.
-These test methods are executed by the test suite run method.
+These test methods are executed when the test suite is executed.
 
-Preceding the test methods, an optional setup method is executed.
+Preceding the test methods, a setup method is executed.
 If the setup fails, execution is stopped.
-Following the test methods a teardown method will be executed,
-regardless whether the test methods passed or failed.
+Following the test methods a teardown method is executed.
+The teardown method is always executed, regardless whether the test methods passed or failed.
 
 Test suite creation
 -------------------
@@ -23,9 +23,9 @@ Creating a test suite is as simple as creating a subclass:
     import lily_unit_test
 
     class MyTestSuite(lily_unit_test.TestSuite):
-        ...
+        # My test suite
 
-Test methods are added using methods with the prefix: :code:`test_`:
+Test methods are added by adding methods with the prefix: :code:`test_`:
 
 .. code-block:: python
 
@@ -34,18 +34,41 @@ Test methods are added using methods with the prefix: :code:`test_`:
     class MyTestSuite(lily_unit_test.TestSuite):
 
         def test_login(self):
-            ...
+            # test log in
 
         def test_upload_image(self):
-            ...
+            # test uploading image
 
 In this case two test methods are defined.
 The test methods are executed in the order as they are created, from top to bottom.
 
+Other methods can also be added to the test suite to provide specific functionality.
+
+.. code-block:: python
+
+    import lily_unit_test
+
+    class MyTestSuite(lily_unit_test.TestSuite):
+
+        def connect_to_server()
+            # connect to server
+
+        def test_login(self):
+            self.connect_to_server()
+            # test log in
+
+        def test_upload_image(self):
+            self.connect_to_server()
+            # test uploading image
+
+In this test suite we added a helper method to connect to the server. We use this in each test method to connect
+to a server before doing the tests. The connect to server method, does not start with :code:`test_` and is ignored
+by the test suite when it is executed.
+
 Running the test suite
 ----------------------
 
-The test suite can be run using the :code:`run` method.
+The test suite can be executed using the :code:`run` method.
 The :code:`run` method returns :code:`True` if the test suite passed and :code:`False` if failed.
 In order to make the test suite run properly, the test suite must be initialized:
 
@@ -68,7 +91,7 @@ In order to make the test suite run properly, the test suite must be initialized
 Using setup and teardown
 ------------------------
 
-The test suite has a default setup and teardown that can be overridden in the subclass.
+The test suite has a default setup and teardown methods that can be overridden in the subclass.
 The default setup and teardown do nothing, they are just empty methods.
 If not overridden, it will not matter.
 The setup and teardown can be overridden in your test suite:
@@ -95,9 +118,9 @@ The setup and teardown can be overridden in your test suite:
             if self.connection is not None and self.connection.is_connected():
                 self.connection.close()
 
-In this hypothetical example, prior to all tests a connection to a server is created.
+In this hypothetical example, prior to all tests a connection to a server is created in the setup method.
 In case this fails because of an exception, the execution stops and the test suite fails.
-In case the setup passes, the test methods will be executed.
+In case the setup method passes, the test methods will be executed.
 Finally, the teardown is executed. The teardown closes the connection with the server.
 If in the hypothetical case, the connection was not established in the setup (failed for some reason),
 closing a not established connection can cause an exception.
@@ -109,14 +132,25 @@ Making test suites pass or fail
 A test method or setup method is passed by the following conditions:
 
 * There were no exceptions or asserts.
+* There were no messages from the standard error handler (stderr).
 * The return value is None (default return value of a method) or True.
 
 A test method or setup method is failed by the following conditions:
 
 * An exception or assert was raised
+* There were messages from the standard error handler (stderr).
 * The return value is False
 
-The teardown can only fail if an exception or assert was raised. The return value is not used.
+The teardown method can only fail if an exception or assert was raised. The return value is not used.
+
+The return value of a method in Python is by default :code:`None`. If the test method is executed and the return value
+is :code:`None`, the test method is marked as passed. If yu wish to explicitly make a method fail, you can return
+:code:`False`. The test suite will mark the test method as failed.
+
+The test suite checks for messages from the standard error handler (stderr).
+There can be threads running in the background that generate exceptions. These exceptions cannot be caught by the
+test suite. But these exceptions will generate messages to the standard error handler. These messages are used for
+the test suite result.
 
 Examples of passing or failing test suites
 ------------------------------------------
@@ -125,28 +159,41 @@ The following examples only show the specific test method from the test suite.
 
 .. code-block:: python
 
+    # Fails in case an exception in the connect to server method is raised
     def test_login(self):
-        # Setup that fails by exception from the connect to server method
         self.connection = connect_to_server(user, password)
-        # The return value is by default None
 
+    # Fail by using an assert
     def test_login(self):
         self.connection = connect_to_server(user, password)
-        # Fail by raising an exception
+        assert self.connection.is_connected(), "We are not connected"
+
+    # Fail by raising an exception if we are not connected
+    def test_login(self):
+        self.connection = connect_to_server(user, password)
         if not self.connection.is_connected():
             raise Exception("We are not connected")
-        # The return value is by default None
 
+    # Fail by using the build-in fail method
     def test_login(self):
         self.connection = connect_to_server(user, password)
-        # Fail by assert
-        assert self.connection.is_connected(), "We are not connected"
-        # The return value is by default None
+        if not self.connection.is_connected():
+            self.fail("We are not connected")
 
+    # Preferred way: fail by using the build-in fail_if method
     def test_login(self):
         self.connection = connect_to_server(user, password)
-        # Pass or fail by return True or False
+        self.fail_if(not self.connection.is_connected(), "We are not connected")
+
+    # Pass or fail by return True or False
+    def test_login(self):
+        self.connection = connect_to_server(user, password)
         return self.connection.is_connected()
+
+The preferred way of letting a test suit pass or fail is using the fail_if method.
+Usually passing or failing will depend on the result of some action (executing a function, comparing a variable).
+The fail_if method also has a way of controlling if the test suite should continue or should be aborted.
+More details in the API section of this document.
 
 Logging messages
 ----------------
@@ -168,9 +215,6 @@ The logger can be accessed by the log attribute of the test suite:
         def test_something(self):
             # Write a log message
             self.log.info("Start test something")
-            ...
-            some test stuff here
-            ...
 
 Before and after running th test suite, the logger is also available:
 
@@ -181,11 +225,9 @@ Before and after running th test suite, the logger is also available:
 
     ts.log.info("This is a message before running the test suite")
 
-    # Run the test suite
     ts.run()
 
     ts.log.info("This is a message after running the test suite")
-
 
 Below some examples of log messages.
 
@@ -290,6 +332,68 @@ The log messages will show this:
     - Classification set to FAIL and test suite passes because of the known issue is solved
     2024-01-05 19:39:46.530 | ERROR  | Test suite passed, but a failure was expected because classification is set to 'FAIL'
     2024-01-05 19:39:46.530 | ERROR  | Test suite TestSuiteClassification: FAILED
+
+Subclassing the test suite
+--------------------------
+
+You can create your own sub class of the test suite and use that test suite sub class for running tests.
+This provides a way for adding your own test functions you can use in all your test suites.
+An example of creating your own test suite base class is shown below:
+
+.. code-block:: python
+
+    import lily_unit_test
+
+    # First we create our own test suite base class, which is a subclass of the lily test suite
+    class MyTestSuiteBaseClass(lily_unit_test.TestSuite):
+
+        # Override constructor, not needed in some cases
+        # Can be needed when we need to initialize stuff before running the test suite
+        def __init__(self, *args):
+            # initialize the lily Test Suite with parameters
+            super().__init__(*args)
+
+            # Add our own stuff to initialize
+            self.my_attribute = some_value
+
+        # Add some methods to use in your test suites
+        def calculate_something_important(self):
+            # Here some amazing code where we calculate something very important.
+
+
+    # Use our own test suite
+    class MyTestSuite(MyTestSuiteBaseClass):
+
+        def test_something(self):
+            # Access the added attribute
+            self.my_attribute = a_new_value
+            # Do some calculations
+            self.calculate_something_important()
+
+
+    # Run the test suite
+    if __name__ == "__main__":
+
+        MyTestSuite().run()
+
+This can help you prevent duplicate code in your tests and make your test suites more maintainable.
+
+There is a small catch. When using the test runner, it will search for any class based on the lily test suite class.
+Meaning in our example, it will run two test suites: MyTestSuiteBaseClass and MyTestSuite.
+We cannot know that MyTestSuiteBaseClass is not a test suite but only used as base class.
+To prevent running the base class, simply add it as an exclusion to the test runner:
+
+.. code-block:: python
+
+    from lily_unit_test import TestRunner
+
+    # Run test runner with the base class excluded
+    options = {
+        "exclude_test_suites": ["MyTestSuiteBaseClass"]
+    }
+    TestRunner.run(".", options)
+
+For more details about using the test runner, see the chapter about the test runner.
 
 Test suite API
 ------------------

@@ -1,5 +1,5 @@
-Test Runner
-===========
+The test runner
+===============
 
 The test runner collects and runs a number of test suites and
 writes all the results to report files.
@@ -52,11 +52,11 @@ The test runner will run all tests in the folder: :code:`../src`.
 This is relative to the :code:`test` folder. Be sure to run the test runner from the :code:`test` folder.
 You can also use an absolute path to the folder containing the test suites.
 
-The test runner will scan all Python modules in the folder in :code:`src` recursively.
+The test runner will scan all Python modules in the folder :code:`src` recursively.
 This means all 4 python modules are checked for test suites.
 
 The test runner imports each module and checks if the module contains a class that is
-based on the test suite base class (:code:`class MyTestSuite(lily_unit_test.TestSuite)`).
+based on the test suite base class (e.g.: :code:`class MyTestSuite(lily_unit_test.TestSuite)`).
 
 All test suites are executed in alphabetical order.
 If a specific order is required, use numbers in the file and folder names to sort them.

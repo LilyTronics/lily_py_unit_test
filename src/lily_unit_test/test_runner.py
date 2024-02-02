@@ -159,7 +159,6 @@ class TestRunner(object):
             }
             TestRunner.run(".", options)
 
-
         Because the options are in a dictionary, they can be easily read from a JSON file.
 
         .. code-block:: python
@@ -178,10 +177,8 @@ class TestRunner(object):
 
         test_suites_path = os.path.abspath(test_suites_path)
 
-        report_path = options.get(
-            "report_folder",
-            os.path.join(os.path.dirname(test_suites_path), TestSettings.REPORT_FOLDER_NAME)
-        )
+        report_path = options.get("report_folder",
+                                  os.path.join(os.path.dirname(test_suites_path), TestSettings.REPORT_FOLDER_NAME))
         write_log_files = not options.get("no_log_files", False)
 
         report_data = {}
