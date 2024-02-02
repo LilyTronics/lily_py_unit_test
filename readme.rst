@@ -1,13 +1,13 @@
 Lily unit test package for Python
 =================================
 
-This package aims to be a full alternative to the Python's build in unittest package.
+This package aims to be a full alternative to the Python's build-in unittest package.
 This package has the following features:
 
 - Test suite class with various build-in functions.
 - Test runner that scans all Python files in your project for test suites and executes them.
-- Single page HTML report: `test report latest release <https://htmlpreview.github.io/?https://github.com/LilyTronics/lily-py-unit-test/blob/main/lily_unit_test_reports/20240201_082314_Test_Report_V1.9.0.html>`_.
-- Text log file of every test suit that was executed.
+- Single page HTML report: `test report latest release <https://htmlpreview.github.io/?https://github.com/LilyTronics/lily-py-unit-test/blob/main/lily_unit_test_reports/20240201_082314_Test_Report_latest.html>`_.
+- Text log file of every test suite that was executed.
 
 The package is available on `PyPi <https://pypi.org/project/lily-unit-test>`_.
 
@@ -43,10 +43,10 @@ The following example shows a basic test suite for your python code:
     class MyTestSuite(lily_unit_test.TestSuite):
 
         def test_add_one(self):
-            assert add_one(3) == 4, "Wrong return value"
+            self.fail_if(add_one(3) != 4, "Wrong return value")
 
         def test_add_two(self):
-            assert add_two(3) == 5, "Wrong return value"
+            self.fail_if(add_two(3) != 5, "Wrong return value")
 
 
     if __name__ == "__main__":
@@ -66,7 +66,7 @@ Run the Python file, the output should look like this:
     2023-12-20 19:28:46.106 | INFO   | Test suite MyTestSuite: 2 of 2 test cases passed (100.0%)
     2023-12-20 19:28:46.106 | INFO   | Test suite MyTestSuite: PASSED
 
-Run the test runner to run all test suites in a folder:
+A test runner is included that runs all test suites in a folder:
 
 .. code-block:: python
 
@@ -76,13 +76,20 @@ Run the test runner to run all test suites in a folder:
 
 The test runner scans the folder recursively for Python files containing a test suite class.
 
-| More detailed information can be found in the `documentation on Read the Docs <https://lily-py-unit-test.readthedocs.io>`_.
+| More detailed information can be found in the documentation on `Read the Docs <https://lily-py-unit-test.readthedocs.io>`_.
 | The source code is available on `GitHub <https://github.com/LilyTronics/lily-py-unit-test>`_.
 
 |
-
 .. image:: https://readthedocs.org/projects/lily-py-unit-test/badge/?version=latest
     :target: https://lily-py-unit-test.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-Created and owned by `LilyTronics <https://lilytronics.nl>`_
+.. image:: https://static.pepy.tech/badge/lily-unit-test
+    :target: https://pepy.tech/project/lily-unit-test
+    :alt: Total downloads
+
+.. image:: https://static.pepy.tech/badge/lily-unit-test/month
+    :target: https://pepy.tech/project/lily-unit-test
+    :alt: Downloads per month
+
+Created and owned by Danny van der Pol, `LilyTronics <https://lilytronics.nl>`_
