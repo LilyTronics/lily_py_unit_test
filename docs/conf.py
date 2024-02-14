@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 project = 'lily-unit-test'
-copyright = '2024, LilyTronics'
+project_copyright = '2024, LilyTronics'
 author = 'LilyTronics'
 
 # -- General configuration ---------------------------------------------------
