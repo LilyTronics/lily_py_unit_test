@@ -1,6 +1,7 @@
 """
 Container for classification constants.
 """
+# Pylint: disable=too-few-public-methods
 
 
 class Classification:

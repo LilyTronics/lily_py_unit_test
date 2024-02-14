@@ -7,7 +7,7 @@ https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 # Disable message for naming convention in this file,
 # because we must comply to the sphinx naming convention
-# pylint: disable-msg=C0103
+# pylint: disable-msg=invalid-name
 
 import os
 import sys
