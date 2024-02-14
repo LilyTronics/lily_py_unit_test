@@ -11,7 +11,8 @@ from lily_unit_test.logger import Logger
 
 
 def generate_html_report(report_data):
-    time_format = Logger.TIME_STAMP_FORMAT.split(".")[0]
+    """ Generate the HTML report based on the report data. """
+    time_format = Logger.TIME_STAMP_FORMAT.split(".", maxsplit=1)[0]
 
     test_runner_start_message = ""
     test_runner_start = ""
@@ -40,14 +41,15 @@ def generate_html_report(report_data):
 
         else:
             # Test suite results
-            test_suites_results += "{}".format(_generate_test_suite_results(key, report_data[key]))
+            test_suites_results += _generate_test_suite_results(key, report_data[key])
 
     start = datetime.strptime(test_runner_start, time_format)
     end = datetime.strptime(test_runner_end, time_format)
     test_runner_duration = end - start
 
-    template_filename = os.path.join(os.path.dirname(__file__), "artifacts", "html_report_template.html")
-    with open(template_filename, "r") as fp:
+    template_filename = os.path.join(os.path.dirname(__file__), "artifacts",
+                                     "html_report_template.html")
+    with open(template_filename, "r", encoding="utf-8") as fp:
         template = fp.read()
 
     output = Template(template).substitute({
@@ -64,7 +66,7 @@ def generate_html_report(report_data):
 
 
 def _generate_test_suite_results(test_suite_key, log_messages):
-    time_format = Logger.TIME_STAMP_FORMAT.split(".")[0]
+    time_format = Logger.TIME_STAMP_FORMAT.split(".", maxsplit=1)[0]
 
     test_name = test_suite_key.split("_")[-1]
     test_start = log_messages[0].split("|")[0].split(".")[0]
@@ -78,11 +80,12 @@ def _generate_test_suite_results(test_suite_key, log_messages):
     end = datetime.strptime(test_end, time_format)
     duration = end - start
 
-    output = '<div class="test-suite {}">'.format(test_result.lower())
+    output = f'<div class="test-suite {test_result.lower()}">'
     output += '<span class="expand" title="Show/hide log messages" '
-    output += 'id="button_{0}" onclick="show_log(\'{0}\')">&plus;</span> '.format(test_suite_key)
-    output += "{}: {} ({})</div>\n".format(test_name, test_result, duration)
-    output += '<div class="log-messages" style="display:none" id="log_{}">\n'.format(test_suite_key)
+    output += f'id="button_{test_suite_key}" '
+    output += f'onclick="show_log(\'{test_suite_key}\')">&plus;</span> '
+    output += f"{test_name}: {test_result} ({duration})</div>\n"
+    output += f'<div class="log-messages" style="display:none" id="log_{test_suite_key}">\n'
     for log_message in log_messages:
         level = "debug"
         parts = log_message.split("|")
@@ -92,7 +95,7 @@ def _generate_test_suite_results(test_suite_key, log_messages):
             log_message = "&nbsp;"
         else:
             log_message = html.escape(log_message)
-        output += '<div class="log {}"><pre>{}</pre></div>\n'.format(level, log_message)
+        output += f'<div class="log {level}"><pre>{log_message}</pre></div>\n'
     output += "</div>\n"
 
     return output.strip()
@@ -153,5 +156,5 @@ if __name__ == "__main__":
     tr_logger.shutdown()
     dummy_report_data["1_TestRunner"] = tr_logger.get_log_messages()
 
-    with open("test_report.html", "w") as fp_out:
+    with open("test_report.html", "w", encoding="utf-8") as fp_out:
         fp_out.write(generate_html_report(dummy_report_data))
