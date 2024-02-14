@@ -20,7 +20,7 @@ class TestEnvironmentSetup(lily_unit_test.TestSuite):
                 full_path = os.path.join(report_path, item)
                 if os.path.isfile(full_path):
                     # Do not delete release reports
-                    if not (item.endswith(".html") and "_V" in item):
+                    if not (item.endswith(".html") and "_latest" in item):
                         self.log.debug("Remove file: {}".format(full_path))
                         os.remove(full_path)
                 elif os.path.isdir(full_path):
