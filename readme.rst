@@ -92,4 +92,8 @@ The test runner scans the folder recursively for Python files containing a test 
     :target: https://pepy.tech/project/lily-unit-test
     :alt: Downloads per month
 
+.. image:: https://github.com/LilyTronics/lily-py-unit-test/actions/workflows/pylint.yml/badge.svg
+    :target: https://github.com/LilyTronics/lily-py-unit-test/actions/workflows/pylint.yml
+    :alt: Pylint
+
 Created and owned by Danny van der Pol, `LilyTronics <https://lilytronics.nl>`_
