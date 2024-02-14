@@ -8,7 +8,7 @@ from lily_unit_test.test_settings import TestSettings
 from lily_unit_test.test_runner import TestRunner
 from lily_unit_test.test_suite import TestSuite
 
-# pylint: disable-self-assigning-variable
+# pylint: disable=self-assigning-variable
 # For easy import:
 Classification = Classification
 Logger = Logger
