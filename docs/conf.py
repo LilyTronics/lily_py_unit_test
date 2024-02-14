@@ -3,9 +3,11 @@ Configuration file for the Sphinx documentation builder.
 
 For the full list of built-in configuration values, see the documentation:
 https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+Disable message for naming convention in this file, because we must comply to the sphinx naming convention
+pylint: disable-msg=C0103
 """
 
-# pylint: disable-msg=C0103
 
 import os
 import sys
