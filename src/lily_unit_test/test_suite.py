@@ -31,18 +31,12 @@ class TestSuite:
         self._lock = threading.RLock()
 
     def _set_result(self, result):
-        self._lock.acquire()
-        try:
+        with self._lock:
             self._test_suite_result = result
-        finally:
-            self._lock.release()
 
     def _get_result(self):
-        self._lock.acquire()
-        try:
+        with self._lock:
             result = self._test_suite_result
-        finally:
-            self._lock.release()
         return result
 
     def _get_test_methods(self):

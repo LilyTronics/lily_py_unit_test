@@ -149,8 +149,7 @@ class Logger:
         :param message_type: a string indicating the message type (see table above).
         :param message_text: the message to write to the logger.
         """
-        self._lock.acquire()
-        try:
+        with self._lock:
             messages_to_write = []
             if message_type == self.TYPE_EMPTY_LINE:
                 messages_to_write.append("")
@@ -170,8 +169,6 @@ class Logger:
                 self._log_messages.append(message)
                 if self._log_to_stdout:
                     self._org_stdout.write(f"{message}\n")
-        finally:
-            self._lock.release()
 
 
 if __name__ == "__main__":
