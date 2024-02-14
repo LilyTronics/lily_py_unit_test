@@ -9,7 +9,7 @@ import time
 from datetime import datetime
 
 
-class Logger(object):
+class Logger:
     """
     Logger class.
     Handles all log messages and messages from stdout and stderr.
@@ -53,17 +53,18 @@ class Logger(object):
     TIME_STAMP_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
     _LOG_FORMAT = "{} | {:6} | {}"
 
-    class _StdLogger(object):
+    class _StdLogger:
 
         def __init__(self, logger, std_type):
             self._logger = logger
             self._type = std_type
 
         def write(self, message):
+            """ Write a message to the handler. """
             self._logger.handle_message(self._type, message)
 
         def flush(self):
-            pass
+            """ Flush the buffer. """
 
     def __init__(self, redirect_std=True, log_to_stdout=True):
         self._log_to_stdout = log_to_stdout
@@ -72,13 +73,14 @@ class Logger(object):
         self._has_stderr_messages = False
         self._lock = threading.RLock()
 
-        self._orgStdout = sys.stdout
-        self._orgStderr = sys.stderr
+        self._org_stdout = sys.stdout
+        self._org_stderr = sys.stderr
         if redirect_std:
             sys.stdout = self._StdLogger(self, self.TYPE_STDOUT)
             sys.stderr = self._StdLogger(self, self.TYPE_STDERR)
 
     def log_to_stdout(self, enable):
+        """ Enables or disables logging to the standard output (stdout). """
         self._log_to_stdout = enable
 
     def get_log_messages(self):
@@ -87,7 +89,8 @@ class Logger(object):
 
         :return: reference to the list of strings containing all log messages.
 
-        | Note that it returns a reference, meaning any changes the logger makes to the list will affect the reference.
+        | Note that it returns a reference, meaning any changes the logger makes to the list will
+        | affect the reference.
         | To get a static copy of the log messages use: :code:`get_log_messages().copy()`.
         | This will return a new list with a copy of all the log messages at that moment.
         """
@@ -104,8 +107,8 @@ class Logger(object):
         Shutdown the logger.
         This will restore the original stdout and stderr handlers.
         """
-        sys.stdout = self._orgStdout
-        sys.stderr = self._orgStderr
+        sys.stdout = self._org_stdout
+        sys.stderr = self._org_stderr
 
     def info(self, message):
         """
@@ -113,7 +116,7 @@ class Logger(object):
 
         :param message: the message to write to the logger.
         """
-        self.handle_message(self.TYPE_INFO, "{}\n".format(message))
+        self.handle_message(self.TYPE_INFO, f"{message}\n")
 
     def debug(self, message):
         """
@@ -121,7 +124,7 @@ class Logger(object):
 
         :param message: the message to write to the logger.
         """
-        self.handle_message(self.TYPE_DEBUG, "{}\n".format(message))
+        self.handle_message(self.TYPE_DEBUG, f"{message}\n")
 
     def error(self, message):
         """
@@ -129,7 +132,7 @@ class Logger(object):
 
         :param message: the message to write to the logger.
         """
-        self.handle_message(self.TYPE_ERROR, "{}\n".format(message))
+        self.handle_message(self.TYPE_ERROR, f"{message}\n")
 
     def empty_line(self):
         """
@@ -139,8 +142,9 @@ class Logger(object):
 
     def handle_message(self, message_type, message_text):
         """
-        Handles the message of a given type. This method is use by :code:`info()`, :code:`debug()`, :code:`error()` and
-        :code:`empty_line()`. It is not encouraged to use this function, use with caution.
+        Handles the message of a given type. This method is use by :code:`info()`, :code:`debug()`,
+        :code:`error()` and :code:`empty_line()`. It is not encouraged to use this function,
+        use with caution.
 
         :param message_type: a string indicating the message type (see table above).
         :param message_text: the message to write to the logger.
@@ -165,7 +169,7 @@ class Logger(object):
             for message in messages_to_write:
                 self._log_messages.append(message)
                 if self._log_to_stdout:
-                    self._orgStdout.write("{}\n".format(message))
+                    self._org_stdout.write(f"{message}\n")
         finally:
             self._lock.release()
 
@@ -173,7 +177,8 @@ class Logger(object):
 if __name__ == "__main__":
 
     def _generate_error():
-        def _exception(): _dummy = 1 / 0
+        def _exception():
+            _ = 1 / 0
 
         t = threading.Thread(target=_exception)
         t.start()
@@ -190,13 +195,13 @@ if __name__ == "__main__":
     print("This is a stdout message.")
     print("This is a\nmulti line message.")
 
-    test_logger.info("STDERR message: {}".format(test_logger.has_stderr_messages()))
+    test_logger.info(f"STDERR message: {test_logger.has_stderr_messages()}")
     test_logger.empty_line()
 
     _generate_error()
 
     test_logger.empty_line()
-    test_logger.info("STDERR message: {}".format(test_logger.has_stderr_messages()))
+    test_logger.info(f"STDERR message: {test_logger.has_stderr_messages()}")
 
     test_logger.shutdown()
 

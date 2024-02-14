@@ -10,20 +10,21 @@ from lily_unit_test.classification import Classification
 from lily_unit_test.logger import Logger
 
 
-class TestSuite(object):
+class TestSuite:
     """
     Base class for all test suites.
 
     :param report_path: path were the reports are stored.
 
-    The test runner creates the report path and passes it to the test suite. This path can be used in the tests.
-    Setting this path here will not change the path where the reports are stored.
+    The test runner creates the report path and passes it to the test suite. This path can be used
+    in the tests. Setting this path here will not change the path where the reports are stored.
     This is determined by the test runner (see test runner class).
     """
 
     CLASSIFICATION = Classification.PASS
 
     def __init__(self, report_path=None):
+        self._test_suite_name = self.__class__.__name__
         self._report_path = report_path
         self.log = Logger()
         self._test_suite_result = None
@@ -44,78 +45,87 @@ class TestSuite(object):
             self._lock.release()
         return result
 
+    def _get_test_methods(self):
+        test_methods = list(filter(lambda x: x.startswith("test_"),
+                                   list(vars(self.__class__).keys())))
+        n_tests = len(test_methods)
+        assert n_tests > 0, "No tests defined (methods starting with 'test_)"
+        return test_methods
+
+    def _run_setup(self, log_traceback):
+        try:
+            setup_result = self.setup()
+            if setup_result is not None and not setup_result:
+                self.log.error(f"Test suite {self._test_suite_name}: FAILED: setup failed")
+                self._set_result(False)
+        except Exception as e:  # pylint: disable=broad-exception-caught
+            self.log.error(f"Test suite {self._test_suite_name}: FAILED by exception in setup\n"
+                           f"Exception: {e}")
+            if log_traceback:
+                self.log.error(traceback.format_exc().strip())
+            self._set_result(False)
+
+    def _run_test_methods(self, test_methods, log_traceback):
+        n_passed = 0
+        for test_method in test_methods:
+            test_case_name = f"{self._test_suite_name}.{test_method}"
+            self.log.info(f"Run test case: {test_case_name}")
+            try:
+                # Start result None. Test case can set the result to False by using a fail method.
+                self._set_result(None)
+                method_result = getattr(self, test_method)()
+                if (not self.log.has_stderr_messages() and self._get_result() is None and
+                        method_result is None or method_result):
+                    n_passed += 1
+                    self.log.info(f"Test case {test_case_name}: PASSED")
+                else:
+                    self.log.error(f"Test case {test_case_name}: FAILED")
+            except Exception as e:  # pylint: disable=broad-exception-caught
+                self.log.error(f"Test case {test_case_name}: FAILED by exception\nException: {e}")
+                if log_traceback:
+                    self.log.error(traceback.format_exc().strip())
+
+        ratio = 100 * n_passed / len(test_methods)
+        self.log.info(f"Test suite {self._test_suite_name}: "
+                      f"{n_passed} of {len(test_methods)} test cases passed ({ratio:.1f}%)")
+        self._set_result(n_passed == len(test_methods))
+
+    def _run_teardown(self, log_traceback):
+        try:
+            self.teardown()
+        except Exception as e:  # pylint: disable=broad-exception-caught
+            self.log.error(f"Test suite {self._test_suite_name}: FAILED by exception in teardown\n"
+                           f"Exception: {e}")
+            if log_traceback:
+                self.log.error(traceback.format_exc().strip())
+            self._set_result(False)
+
     def run(self, log_traceback=False):
         """
         Run the test suite.
 
-        :param log_traceback: if True, detailed traceback information is written to the logger in case of an exception.
+        :param log_traceback: if True, detailed traceback information is written to the logger in
+            case of an exception.
         :return: True when all tests are passed, False when one or more tests are failed.
 
-        The run method creates a list of all methods starting with :code:`test_`. Before executing the test methods,
-        it executes the setup method. After executing the test methods, it executes the teardown method.
+        The run method creates a list of all methods starting with :code:`test_`.
+        Before executing the test methods, it executes the setup method. After executing the test
+        methods, it executes the teardown method.
         """
-        test_suite_name = self.__class__.__name__
-        self.log.info("Run test suite: {}".format(test_suite_name))
+        self.log.info(f"Run test suite: {self._test_suite_name}")
 
         self._set_result(None)
         try:
-            test_methods = list(filter(lambda x: x.startswith("test_"), list(vars(self.__class__).keys())))
-            n_tests = len(test_methods)
-            assert n_tests > 0, "No tests defined (methods starting with 'test_)"
-
-            # Run the setup
-            try:
-                setup_result = self.setup()
-                if setup_result is not None and not setup_result:
-                    self.log.error("Test suite {}: FAILED: setup failed".format(test_suite_name))
-                    self._set_result(False)
-            except Exception as e:
-                self.log.error("Test suite {}: FAILED by exception in setup\nException: {}".format(test_suite_name, e))
-                if log_traceback:
-                    self.log.error(traceback.format_exc().strip())
-                self._set_result(False)
-
+            test_methods = self._get_test_methods()
+            self._run_setup(log_traceback)
             # After setup, result is either None or False
             if self._get_result() is None:
-                n_passed = 0
-                # Run the test methods
-                for test_method in test_methods:
-                    test_case_name = "{}.{}".format(test_suite_name, test_method)
-                    self.log.info("Run test case: {}".format(test_case_name))
-                    try:
-                        # Start with result None. Test case can set the result to False by using a fail method
-                        self._set_result(None)
-                        method_result = getattr(self, test_method)()
-                        if (not self.log.has_stderr_messages() and self._get_result() is None and
-                                method_result is None or method_result):
-                            n_passed += 1
-                            self.log.info("Test case {}: PASSED".format(test_case_name))
-                        else:
-                            self.log.error("Test case {}: FAILED".format(test_case_name))
-
-                    except Exception as e:
-                        self.log.error("Test case {}: FAILED by exception\nException: {}".format(test_case_name, e))
-                        if log_traceback:
-                            self.log.error(traceback.format_exc().strip())
-
-                ratio = 100 * n_passed / n_tests
-                self.log.info("Test suite {}: {} of {} test cases passed ({:.1f}%)".format(
-                              test_suite_name, n_passed, n_tests, ratio))
-
-                self._set_result(n_passed == n_tests)
-
+                self._run_test_methods(test_methods, log_traceback)
             assert self._get_result() is not None, "Unexpected test result None"
-
-            # Run the teardown
-            try:
-                self.teardown()
-            except Exception as e:
-                self.log.error("Test suite {}: FAILED by exception in teardown\nException: {}".format(
-                               test_suite_name, e))
-                self._set_result(False)
-
-        except Exception as e:
-            self.log.error("Test suite {}: FAILED by exception\nException: {}".format(test_suite_name, e))
+            self._run_teardown(log_traceback)
+        except Exception as e:  # pylint: disable=broad-exception-caught
+            self.log.error(f"Test suite {self._test_suite_name}: FAILED by exception\n"
+                           f"Exception: {e}")
             if log_traceback:
                 self.log.error(traceback.format_exc().strip())
             self._set_result(False)
@@ -124,17 +134,19 @@ class TestSuite(object):
             # We expect a failure
             self._set_result(not self._get_result())
             if self._get_result():
-                self.log.info("Test suite failed, but accepted because classification is set to 'FAIL'")
+                self.log.info("Test suite failed, "
+                              "but accepted because classification is set to 'FAIL'")
             else:
-                self.log.error("Test suite passed, but a failure was expected because classification is set to 'FAIL'")
+                self.log.error("Test suite passed, "
+                               "but a failure was expected because classification is set to 'FAIL'")
         elif self.CLASSIFICATION != Classification.PASS:
-            self.log.error("Test classification is not defined: '{}'".format(self.CLASSIFICATION))
+            self.log.error(f"Test classification is not defined: '{self.CLASSIFICATION}'")
             self._set_result(False)
 
         if self._get_result():
-            self.log.info("Test suite {}: PASSED".format(test_suite_name))
+            self.log.info(f"Test suite {self._test_suite_name}: PASSED")
         else:
-            self.log.error("Test suite {}: FAILED".format(test_suite_name))
+            self.log.error(f"Test suite {self._test_suite_name}: FAILED")
 
         self.log.shutdown()
 
@@ -154,25 +166,25 @@ class TestSuite(object):
 
     def setup(self):
         """
-        The setup method. This can be overridden in the test suite. This will be executed before running all test
-        methods.
+        The setup method. This can be overridden in the test suite. This will be executed before
+        running all test methods.
 
         :return: True or None when the setup is passed, False when the setup is failed.
 
         The test methods are executed after the setup is executed successfully.
-        If the setup fails because of either an exception or returning False, the test methods are not executed.
+        If the setup fails because of either an exception or returning False, the test methods
+        are not executed.
         """
         return True
 
     def teardown(self):
         """
-        The teardown method. This can be overridden in the test suite. This will be executed after running all test
-        methods.
+        The teardown method. This can be overridden in the test suite. This will be executed
+        after running all test methods.
 
-        This method is always executed and if there is an exception raised in this method, the test suite is reported
-        as failed.
+        This method is always executed and if there is an exception raised in this method,
+        the test suite is reported as failed.
         """
-        pass
 
     ################
     # Test methods #
@@ -187,8 +199,8 @@ class TestSuite(object):
 
         The fail method logs an error message and raises an exception.
         When the exception is raised, the test suite stops and is reported as failed.
-        Setting the :code:`raise_exception` to False, does not raise an exception and the test suite continues.
-        Even though the test suite continues it is reported as failed.
+        Setting the :code:`raise_exception` to False, does not raise an exception and the test
+        suite continues. Even though the test suite continues it is reported as failed.
 
         .. code-block:: python
 
@@ -215,7 +227,7 @@ class TestSuite(object):
         """
         self.log.error(error_message)
         if raise_exception:
-            raise Exception(error_message)
+            raise Exception(error_message)  # pylint: disable=broad-exception-raised
         self._set_result(False)
 
     def fail_if(self, expression, error_message, raise_exception=True):
@@ -226,8 +238,9 @@ class TestSuite(object):
         :param error_message: the error message that should be written to the logger.
         :param raise_exception: if True, an exception is raised and the test suite will stop.
 
-        Same as :code:`fail()` but evaluates an expression first. If the expression evaluates to :code:`True`,
-        the :code:`fail()` method is executed with the given parameters.
+        Same as :code:`fail()` but evaluates an expression first.
+        If the expression evaluates to :code:`True`, the :code:`fail()` method is executed
+        with the given parameters.
 
         .. code-block:: python
 
@@ -267,7 +280,8 @@ class TestSuite(object):
         :param args: tuple with arguments to pass to the thread
         :return: a reference to the started thread
 
-        The thread is started as a daemon thread, meaning that the thread will be terminated when test execution stops.
+        The thread is started as a daemon thread, meaning that the thread will be terminated
+        when test execution stops.
         The thread can be monitored by the is_alive() method of the thread.
 
         .. code-block:: python
@@ -289,8 +303,8 @@ class TestSuite(object):
                     if t.is_alive():
                         self.log.debug("The job is still running")
 
-                    # Wait for the job to finish, with a timeout of 30 seconds and check every 0.5 seconds
-                    if self.wait_for(t.is_alive, False, 30, 0.5):
+                    # Wait for the job to finish, with timeout of 30 seconds, check every second.
+                    if self.wait_for(t.is_alive, False, 30, 1):
                         self.log.debug("The job is done")
                     else:
                         self.fail("The thread did not finish within 30 seconds.")
@@ -298,9 +312,11 @@ class TestSuite(object):
                     # Check result from the thread
 
 
-        Note that if an exception is raised in the thread, the thread is ended. The test suite will report a failure.
+        Note that if an exception is raised in the thread, the thread is ended.
+        The test suite will report a failure.
 
-        Note that the thread may be hanging for some reason and does not stop. When checking if the thread is finished,
+        Note that the thread may be hanging for some reason and does not stop.
+        When checking if the thread is finished,
         a timeout should be included.
         """
         t = threading.Thread(target=target, args=args)
@@ -338,8 +354,8 @@ class TestSuite(object):
                     result = self.wait_for(self._test_value, True, 1, 0.1)
 
                 def test_wait_for_function(self):
-                    # Check the outcome of a function, for example checking if a server is connected.
-                    # Note the missing '()' for the function, we want to pass a reference of the function.
+                    # Check the outcome of a function, e.g.: checking if a server is connected.
+                    # Note the missing '()' for the function, we pass a reference of the function.
                     result = self.wait_for(server.is_connected, True, 5, 0.1)
 
         """
@@ -347,7 +363,7 @@ class TestSuite(object):
         while timeout > 0:
             if callable(object_to_check):
                 result = object_to_check()
-            elif type(object_to_check) is list and len(object_to_check) > 0:
+            elif isinstance(object_to_check, list) and len(object_to_check) > 0:
                 result = object_to_check[0]
             if result == expected_result:
                 return True

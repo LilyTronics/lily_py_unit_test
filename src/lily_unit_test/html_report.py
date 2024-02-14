@@ -14,54 +14,52 @@ def generate_html_report(report_data):
     """ Generate the HTML report based on the report data. """
     time_format = Logger.TIME_STAMP_FORMAT.split(".", maxsplit=1)[0]
 
-    test_runner_start_message = ""
-    test_runner_start = ""
-    test_runner_end = ""
-    test_runner_result = ""
-    test_runner_result_message = ""
-    test_suites_results = ""
+    template_values = {
+        "start_message": "",
+        "start_date": "",
+        "end_date": "",
+        "duration": "",
+        "result": "",
+        "result_class": "",
+        "result_message": "",
+        "test_suites_results": ""
+    }
 
     for key in report_data.keys():
         # Test runner result
         if "1_TestRunner" in key:
             # First message for start time and message
             parts = report_data[key][0].split("|")
-            test_runner_start = parts[0].split(".")[0]
-            test_runner_start_message = parts[-1].strip()
+            template_values["start_date"] = parts[0].split(".")[0]
+            template_values["start_message"] = parts[-1].strip()
 
             # Second last message for result message
-            test_runner_result_message = report_data[key][-2].split("|")[-1].strip()
+            template_values["result_message"] = report_data[key][-2].split("|")[-1].strip()
 
             # Last message for end time and result
-            test_runner_end = report_data[key][-1].split("|")[0].split(".")[0]
+            template_values["end_date"] = report_data[key][-1].split("|")[0].split(".")[0]
             if "PASSED" in report_data[key][-1]:
-                test_runner_result = "PASSED"
+                template_values["result"] = "PASSED"
             else:
-                test_runner_result = "FAILED"
+                template_values["result"] = "FAILED"
 
         else:
             # Test suite results
-            test_suites_results += _generate_test_suite_results(key, report_data[key])
+            template_values["test_suites_results"] += _generate_test_suite_results(key,
+                                                                                   report_data[key])
 
-    start = datetime.strptime(test_runner_start, time_format)
-    end = datetime.strptime(test_runner_end, time_format)
-    test_runner_duration = end - start
+    start = datetime.strptime(template_values["start_date"], time_format)
+    end = datetime.strptime(template_values["end_date"], time_format)
+    template_values["duration"] = end - start
 
     template_filename = os.path.join(os.path.dirname(__file__), "artifacts",
                                      "html_report_template.html")
     with open(template_filename, "r", encoding="utf-8") as fp:
         template = fp.read()
 
-    output = Template(template).substitute({
-        "start_message": test_runner_start_message,
-        "start_date": test_runner_start,
-        "end_date": test_runner_end,
-        "duration": test_runner_duration,
-        "result": test_runner_result,
-        "result_class": test_runner_result.lower(),
-        "result_message": test_runner_result_message,
-        "test_suites_results": test_suites_results
-    })
+    template_values["result_class"] = template_values["result"].lower()
+
+    output = Template(template).substitute(template_values)
     return output
 
 

@@ -7,6 +7,7 @@ from lily_unit_test.test_suite import TestSuite
 
 
 class TestEmpty(TestSuite):
+    """ Test if an empty class fails because there are no test methods. """
 
     CLASSIFICATION = Classification.FAIL
 

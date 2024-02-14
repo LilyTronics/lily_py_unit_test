@@ -9,6 +9,7 @@ from lily_unit_test.test_settings import TestSettings
 
 
 def run_unit_tests():
+    """ Run all the unit tests and create an HTML report. """
     root_path = os.path.dirname(__file__)
     report_folder = os.path.join(os.path.dirname(root_path), TestSettings.REPORT_FOLDER_NAME)
     if not os.path.isdir(report_folder):
