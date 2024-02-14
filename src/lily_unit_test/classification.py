@@ -3,6 +3,8 @@ Container for classification constants.
 """
 
 
-class Classification(object):
+class Classification:
+    """ Classification constants to use for classifying the test suite """
+
     PASS = "pass"
     FAIL = "fail"
