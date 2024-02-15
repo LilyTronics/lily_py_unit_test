@@ -7,8 +7,6 @@ import lily_unit_test
 
 
 class TestWaitFor(lily_unit_test.TestSuite):
-    """ Test the wait_for method of the test suite. """
-
     _test_value = [False]
 
     def _change_value(self):
@@ -20,7 +18,6 @@ class TestWaitFor(lily_unit_test.TestSuite):
         return self._test_value
 
     def test_wait_for_variable(self):
-        """ Test waiting for variable change. """
         # Set initial value of the variable
         self._test_value[0] = False
         # We use a thread to manipulate the value independent of the wait for
@@ -34,7 +31,6 @@ class TestWaitFor(lily_unit_test.TestSuite):
             self.fail("The value did not change")
 
     def test_wait_for_function(self):
-        """ Test wait for return value of function change. """
         # Set initial value of the variable
         self._test_value = 0
         start = time.perf_counter()

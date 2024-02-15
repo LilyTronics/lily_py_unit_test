@@ -2,7 +2,6 @@
 Test runner class.
 Runs all test suites from a specific package folder (recursive)
 """
-# pylint: disable=too-few-public-methods
 
 import inspect
 import os

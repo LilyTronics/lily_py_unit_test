@@ -60,11 +60,10 @@ class Logger:
             self._type = std_type
 
         def write(self, message):
-            """ Write a message to the handler. """
             self._logger.handle_message(self._type, message)
 
         def flush(self):
-            """ Flush the buffer. """
+            """ Required for compatibility. """
 
     def __init__(self, redirect_std=True, log_to_stdout=True):
         self._log_to_stdout = log_to_stdout
@@ -80,7 +79,6 @@ class Logger:
             sys.stderr = self._StdLogger(self, self.TYPE_STDERR)
 
     def log_to_stdout(self, enable):
-        """ Enables or disables logging to the standard output (stdout). """
         self._log_to_stdout = enable
 
     def get_log_messages(self):

@@ -52,7 +52,7 @@ class TestSuite:
             if setup_result is not None and not setup_result:
                 self.log.error(f"Test suite {self._test_suite_name}: FAILED: setup failed")
                 self._set_result(False)
-        except Exception as e:  # pylint: disable=broad-exception-caught
+        except Exception as e:
             self.log.error(f"Test suite {self._test_suite_name}: FAILED by exception in setup\n"
                            f"Exception: {e}")
             if log_traceback:
@@ -74,7 +74,7 @@ class TestSuite:
                     self.log.info(f"Test case {test_case_name}: PASSED")
                 else:
                     self.log.error(f"Test case {test_case_name}: FAILED")
-            except Exception as e:  # pylint: disable=broad-exception-caught
+            except Exception as e:
                 self.log.error(f"Test case {test_case_name}: FAILED by exception\nException: {e}")
                 if log_traceback:
                     self.log.error(traceback.format_exc().strip())
@@ -87,7 +87,7 @@ class TestSuite:
     def _run_teardown(self, log_traceback):
         try:
             self.teardown()
-        except Exception as e:  # pylint: disable=broad-exception-caught
+        except Exception as e:
             self.log.error(f"Test suite {self._test_suite_name}: FAILED by exception in teardown\n"
                            f"Exception: {e}")
             if log_traceback:
@@ -117,7 +117,7 @@ class TestSuite:
                 self._run_test_methods(test_methods, log_traceback)
             assert self._get_result() is not None, "Unexpected test result None"
             self._run_teardown(log_traceback)
-        except Exception as e:  # pylint: disable=broad-exception-caught
+        except Exception as e:
             self.log.error(f"Test suite {self._test_suite_name}: FAILED by exception\n"
                            f"Exception: {e}")
             if log_traceback:
@@ -221,7 +221,7 @@ class TestSuite:
         """
         self.log.error(error_message)
         if raise_exception:
-            raise Exception(error_message)  # pylint: disable=broad-exception-raised
+            raise Exception(error_message)
         self._set_result(False)
 
     def fail_if(self, expression, error_message, raise_exception=True):

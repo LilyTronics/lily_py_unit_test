@@ -8,12 +8,9 @@ import lily_unit_test
 
 
 class TestEnvironmentSetup(lily_unit_test.TestSuite):
-    """ Test suite for setting up the test environment. """
 
     def test_setup_environment(self):
-        """ Setup the test environment. """
         result = True
-
         report_path = self.get_report_path()
         if report_path is not None:
             self.log.info(f"Remove old log files in {report_path}")

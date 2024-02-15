@@ -11,7 +11,6 @@ from lily_unit_test.logger import Logger
 
 
 def generate_html_report(report_data):
-    """ Generate the HTML report based on the report data. """
     time_format = Logger.TIME_STAMP_FORMAT.split(".", maxsplit=1)[0]
 
     template_values = {

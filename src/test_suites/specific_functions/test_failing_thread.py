@@ -7,8 +7,6 @@ from lily_unit_test.test_suite import TestSuite
 
 
 class TestFailingThread(TestSuite):
-    """ Test if the test suite fails, when there is an exception in the thread. """
-
     CLASSIFICATION = Classification.FAIL
 
     def _thread(self):
@@ -17,7 +15,6 @@ class TestFailingThread(TestSuite):
         _ = 1 / 0
 
     def test_failing_thread(self):
-        """ Test a failing thread. """
         t = self.start_thread(self._thread)
         self.fail_if(not t.is_alive(), "The thread is not running")
 

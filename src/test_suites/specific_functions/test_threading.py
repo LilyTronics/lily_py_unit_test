@@ -7,14 +7,12 @@ import lily_unit_test
 
 
 class TestThreading(lily_unit_test.TestSuite):
-    """ Test the threading function of the test suite. """
 
     def _thread(self):
         for _ in range(20):
             self.sleep(0.1)
 
     def test_threading(self):
-        """ Test the threading function. """
         t = self.start_thread(self._thread)
         self.fail_if(not t.is_alive(), "The thread is not running")
         start = time.perf_counter()
