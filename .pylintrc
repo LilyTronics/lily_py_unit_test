@@ -1,0 +1,7 @@
+[MESSAGES CONTROL]
+disable=
+    missing-class-docstring,
+    missing-function-docstring,
+    too-few-public-methods,
+    broad-exception-caught,
+    broad-exception-raised
