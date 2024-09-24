@@ -144,7 +144,7 @@ A test method or setup method is failed by the following conditions:
 The teardown method can only fail if an exception or assert was raised. The return value is not used.
 
 The return value of a method in Python is by default :code:`None`. If the test method is executed and the return value
-is :code:`None`, the test method is marked as passed. If yu wish to explicitly make a method fail, you can return
+is :code:`None`, the test method is marked as passed. If you wish to explicitly make a method fail, you can return
 :code:`False`. The test suite will mark the test method as failed.
 
 The test suite checks for messages from the standard error handler (stderr).
