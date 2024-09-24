@@ -1,12 +1,12 @@
 [project]
 name = "lily-unit-test"
-version = "1.9.0"
+version = "1.10.0"
 authors = [
   { name = "LilyTronics", email="info@lilytronics.nl" },
 ]
 description = "Python Unit Test package by LilyTronics"
 readme = "readme.rst"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU LGPLv3 License",

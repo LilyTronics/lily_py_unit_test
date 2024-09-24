@@ -4,4 +4,5 @@ disable=
     missing-function-docstring,
     too-few-public-methods,
     broad-exception-caught,
-    broad-exception-raised
+    broad-exception-raised,
+    consider-using-f-string

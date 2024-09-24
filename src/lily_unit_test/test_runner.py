@@ -107,8 +107,9 @@ class TestRunner:
         report_name_format = f"{{:0{len(str(len(test_suites_to_run)))}d}}_{{}}"
         logger = Logger(False)
         if len(test_suites_to_run) > 0:
-            logger.info(f"Run {len(test_suites_to_run)} test suites from folder: "
-                        f"{options["test_suites_path"]}")
+            logger.info("Run {n} test suites from folder: "
+                        "{path}".format(n=len(test_suites_to_run),
+                                        path=options["test_suites_path"]))
             for i, test_suite in enumerate(test_suites_to_run):
                 ts = test_suite(options["report_folder"])
                 n_test_suites_passed += cls._run_test_suite(ts, logger)
@@ -118,7 +119,8 @@ class TestRunner:
                     cls._write_log_messages_to_file(options["report_folder"], time_stamp,
                                                     f"{report_id}.txt", ts.log)
         else:
-            logger.info(f"No test suites found in folder: {options["test_suites_path"]}")
+            logger.info("No test suites found in folder: {path}".format(
+                path=options["test_suites_path"]))
 
         logger.empty_line()
 
