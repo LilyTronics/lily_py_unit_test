@@ -6,7 +6,7 @@ This package has the following features:
 
 - Test suite class with various build-in functions.
 - Test runner that scans all Python files in your project for test suites and executes them.
-- Single page HTML report: `test report latest release <https://htmlpreview.github.io/?https://github.com/LilyTronics/lily-py-unit-test/blob/main/lily_unit_test_reports/20240201_082314_Test_Report_latest.html>`_.
+- Single page HTML report: `test report latest release <https://htmlpreview.github.io/?https://github.com/LilyTronics/lily-py-unit-test/blob/main/lily_unit_test_reports/20240924_151002_Test_Report_latest.html>`_.
 - Text log file of every test suite that was executed.
 
 The package is available on `PyPi <https://pypi.org/project/lily-unit-test>`_.

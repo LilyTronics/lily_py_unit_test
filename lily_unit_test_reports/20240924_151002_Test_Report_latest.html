@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+html {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+header {
+    padding: 8px;
+    background-color: #666;
+    color: #fff;
+    font-size: 1.5em;
+}
+
+div {
+    padding: 8px;
+}
+
+span {
+    padding: 2px 4px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    padding: 0px 4px;
+}
+
+pre {
+    margin: 0px;
+    padding: 0px;
+    white-space: pre-wrap;
+}
+
+.expand {
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #ccc;
+    font-weight: bold;
+}
+
+div.test-suite {
+    margin-top: 4px;
+    border: 1px solid #666;
+}
+
+div.log-messages {
+    padding: 0px;
+    border-left: 1px solid #666;
+    border-right: 1px solid #666;
+}
+
+.failed {
+    background-color: #f66;
+}
+
+.passed {
+    background-color: #0c0;
+}
+
+div.log {
+    padding: 4px;
+    border-bottom: 1px solid #666;
+}
+
+.info {
+    background-color: #9cf;
+}
+
+.debug {
+    background-color: #ddd;
+}
+
+.error {
+    background-color: #f90;
+}
+
+.stdout {
+    background-color: #ddd;
+}
+
+.stderr {
+    background-color: #f90;
+}
+</style>
+<script>
+'use strict';
+
+function show_log(test_id) {
+    let current_symbol = document.getElementById('button_' + test_id).innerHTML;
+    let elms = document.getElementsByClassName('log-messages');
+
+    // Hide all logs
+    for (let i = 0; i < elms.length; i++) {
+        elms[i].style.display = 'none';
+        let button_id = elms[i].id.replace('log_', 'button_');
+        document.getElementById(button_id).innerHTML = '&plus;';
+    }
+    // Show requested log
+    if (current_symbol == '+') {
+        document.getElementById('button_' + test_id).innerHTML = '&minus;';
+        document.getElementById('log_' + test_id).style.display = 'block';
+    }
+}
+</script>
+<title>2024-09-24 15:10:02 Test Run PASSED</title>
+</head>
+<body>
+<header>
+2024-09-24 15:10:02 - Test run V1.10.0: PASSED
+</header>
+<div>
+<p>Run 17 test suites from folder: lily-py-unit-test\src\test_suites</p>
+<table>
+<tr><td>Start:</td><td>2024-09-24 15:10:02</td></tr>
+<tr><td>End:</td><td>2024-09-24 15:10:06</td></tr>
+<tr><td>Duration:</td><td>0:00:04</td></tr>
+<tr><td>Result:</td><td><span class="passed">PASSED</span> 17 of 17 test suites passed (100.0%)</td></tr>
+</table>
+</div>
+
+<div>
+<div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_02_TestEnvironmentSetup" onclick="show_log('02_TestEnvironmentSetup')">&plus;</span> TestEnvironmentSetup: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_02_TestEnvironmentSetup">
+<div class="log info"><pre>2024-09-24 15:10:02.817 | INFO   | Run test suite: TestEnvironmentSetup</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.817 | INFO   | Run test case: TestEnvironmentSetup.test_setup_environment</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.817 | INFO   | Remove old log files in lily-py-unit-test\lily_unit_test_reports</pre></div>
+<div class="log debug"><pre>2024-09-24 15:10:02.817 | DEBUG  | Remove folder: lily-py-unit-test\lily_unit_test_reports\20240924_150858</pre></div>
+<div class="log debug"><pre>2024-09-24 15:10:02.824 | DEBUG  | Remove file: lily-py-unit-test\lily_unit_test_reports\20240924_150858_TestRunner.html</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.824 | INFO   | Test case TestEnvironmentSetup.test_setup_environment: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.824 | INFO   | Test suite TestEnvironmentSetup: 1 of 1 test cases passed (100.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.824 | INFO   | Test suite TestEnvironmentSetup: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_03_TestEmpty" onclick="show_log('03_TestEmpty')">&plus;</span> TestEmpty: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_03_TestEmpty">
+<div class="log info"><pre>2024-09-24 15:10:02.825 | INFO   | Run test suite: TestEmpty</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:02.825 | ERROR  | Test suite TestEmpty: FAILED by exception</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:02.825 | ERROR  | Exception: No tests defined (methods starting with &#x27;test_)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.825 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.825 | INFO   | Test suite TestEmpty: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_04_TestFailNoException" onclick="show_log('04_TestFailNoException')">&plus;</span> TestFailNoException: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_04_TestFailNoException">
+<div class="log info"><pre>2024-09-24 15:10:02.826 | INFO   | Run test suite: TestFailNoException</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.826 | INFO   | Run test case: TestFailNoException.test_fail_by_return_false</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:02.826 | ERROR  | Test case TestFailNoException.test_fail_by_return_false: FAILED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.826 | INFO   | Test suite TestFailNoException: 0 of 1 test cases passed (0.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.826 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.826 | INFO   | Test suite TestFailNoException: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_05_TestFailWithException" onclick="show_log('05_TestFailWithException')">&plus;</span> TestFailWithException: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_05_TestFailWithException">
+<div class="log info"><pre>2024-09-24 15:10:02.829 | INFO   | Run test suite: TestFailWithException</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.829 | INFO   | Run test case: TestFailWithException.test_fail_by_return_false</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:02.829 | ERROR  | Test case TestFailWithException.test_fail_by_return_false: FAILED by exception</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:02.829 | ERROR  | Exception: division by zero</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.829 | INFO   | Test suite TestFailWithException: 0 of 1 test cases passed (0.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.829 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.829 | INFO   | Test suite TestFailWithException: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_06_TestOrder" onclick="show_log('06_TestOrder')">&plus;</span> TestOrder: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_06_TestOrder">
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Run test suite: TestOrder</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Run test case: TestOrder.test_first</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Test case TestOrder.test_first: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Run test case: TestOrder.test_second</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Test case TestOrder.test_second: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Run test case: TestOrder.test_third</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Test case TestOrder.test_third: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Run test case: TestOrder.test_fourth</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Test case TestOrder.test_fourth: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Run test case: TestOrder.test_order</pre></div>
+<div class="log debug"><pre>2024-09-24 15:10:02.830 | DEBUG  | Order: [0, 1, 2, 3]</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Test case TestOrder.test_order: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Test suite TestOrder: 5 of 5 test cases passed (100.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.830 | INFO   | Test suite TestOrder: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_07_TestPass" onclick="show_log('07_TestPass')">&plus;</span> TestPass: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_07_TestPass">
+<div class="log info"><pre>2024-09-24 15:10:02.831 | INFO   | Run test suite: TestPass</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.831 | INFO   | Run test case: TestPass.test_pass_by_return_none</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.831 | INFO   | Test case TestPass.test_pass_by_return_none: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.831 | INFO   | Run test case: TestPass.test_pass_by_return_true</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.831 | INFO   | Test case TestPass.test_pass_by_return_true: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.831 | INFO   | Test suite TestPass: 2 of 2 test cases passed (100.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.831 | INFO   | Test suite TestPass: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_08_TestSetupFailException" onclick="show_log('08_TestSetupFailException')">&plus;</span> TestSetupFailException: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_08_TestSetupFailException">
+<div class="log info"><pre>2024-09-24 15:10:02.831 | INFO   | Run test suite: TestSetupFailException</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:02.831 | ERROR  | Test suite TestSetupFailException: FAILED by exception in setup</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:02.831 | ERROR  | Exception: division by zero</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.831 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.831 | INFO   | Test suite TestSetupFailException: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_09_TestSetupFailReturnFalse" onclick="show_log('09_TestSetupFailReturnFalse')">&plus;</span> TestSetupFailReturnFalse: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_09_TestSetupFailReturnFalse">
+<div class="log info"><pre>2024-09-24 15:10:02.832 | INFO   | Run test suite: TestSetupFailReturnFalse</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:02.832 | ERROR  | Test suite TestSetupFailReturnFalse: FAILED: setup failed</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.832 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.832 | INFO   | Test suite TestSetupFailReturnFalse: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_10_TestTeardownFailException" onclick="show_log('10_TestTeardownFailException')">&plus;</span> TestTeardownFailException: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_10_TestTeardownFailException">
+<div class="log info"><pre>2024-09-24 15:10:02.833 | INFO   | Run test suite: TestTeardownFailException</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.833 | INFO   | Run test case: TestTeardownFailException.test_dummy</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.833 | INFO   | Test case TestTeardownFailException.test_dummy: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.833 | INFO   | Test suite TestTeardownFailException: 1 of 1 test cases passed (100.0%)</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:02.833 | ERROR  | Test suite TestTeardownFailException: FAILED by exception in teardown</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:02.833 | ERROR  | Exception: division by zero</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.833 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.833 | INFO   | Test suite TestTeardownFailException: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_11_TestFailingThread" onclick="show_log('11_TestFailingThread')">&plus;</span> TestFailingThread: PASSED (0:00:01)</div>
+<div class="log-messages" style="display:none" id="log_11_TestFailingThread">
+<div class="log info"><pre>2024-09-24 15:10:02.833 | INFO   | Run test suite: TestFailingThread</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:02.833 | INFO   | Run test case: TestFailingThread.test_failing_thread</pre></div>
+<div class="log stderr"><pre>2024-09-24 15:10:03.350 | STDERR | Exception in thread Thread-1 (_thread):</pre></div>
+<div class="log stderr"><pre>2024-09-24 15:10:03.350 | STDERR | Traceback (most recent call last):</pre></div>
+<div class="log stderr"><pre>2024-09-24 15:10:03.350 | STDERR |   File &quot;C:\Python310\lib\threading.py&quot;, line 1016, in _bootstrap_inner</pre></div>
+<div class="log stderr"><pre>2024-09-24 15:10:03.350 | STDERR |     self.run()</pre></div>
+<div class="log stderr"><pre>2024-09-24 15:10:03.350 | STDERR |   File &quot;C:\Python310\lib\threading.py&quot;, line 953, in run</pre></div>
+<div class="log stderr"><pre>2024-09-24 15:10:03.351 | STDERR |     self._target(*self._args, **self._kwargs)</pre></div>
+<div class="log stderr"><pre>2024-09-24 15:10:03.351 | STDERR |   File &quot;lily-py-unit-test\src\test_suites\specific_functions\test_failing_thread.py&quot;, line 15, in _thread</pre></div>
+<div class="log stderr"><pre>2024-09-24 15:10:03.351 | STDERR |     _ = 1 / 0</pre></div>
+<div class="log stderr"><pre>2024-09-24 15:10:03.351 | STDERR | ZeroDivisionError: division by zero</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:03.381 | ERROR  | Test case TestFailingThread.test_failing_thread: FAILED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:03.381 | INFO   | Test suite TestFailingThread: 0 of 1 test cases passed (0.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:03.381 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:03.381 | INFO   | Test suite TestFailingThread: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_12_TestThreading" onclick="show_log('12_TestThreading')">&plus;</span> TestThreading: PASSED (0:00:02)</div>
+<div class="log-messages" style="display:none" id="log_12_TestThreading">
+<div class="log info"><pre>2024-09-24 15:10:03.382 | INFO   | Run test suite: TestThreading</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:03.382 | INFO   | Run test case: TestThreading.test_threading</pre></div>
+<div class="log debug"><pre>2024-09-24 15:10:05.551 | DEBUG  | The thread took: 2.17 seconds</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:05.551 | INFO   | Test case TestThreading.test_threading: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:05.551 | INFO   | Test suite TestThreading: 1 of 1 test cases passed (100.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:05.551 | INFO   | Test suite TestThreading: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_13_TestWaitFor" onclick="show_log('13_TestWaitFor')">&plus;</span> TestWaitFor: PASSED (0:00:01)</div>
+<div class="log-messages" style="display:none" id="log_13_TestWaitFor">
+<div class="log info"><pre>2024-09-24 15:10:05.553 | INFO   | Run test suite: TestWaitFor</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:05.553 | INFO   | Run test case: TestWaitFor.test_wait_for_variable</pre></div>
+<div class="log debug"><pre>2024-09-24 15:10:06.096 | DEBUG  | It took 0.54 seconds for the variable to change</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.096 | INFO   | Test case TestWaitFor.test_wait_for_variable: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.096 | INFO   | Run test case: TestWaitFor.test_wait_for_function</pre></div>
+<div class="log debug"><pre>2024-09-24 15:10:06.531 | DEBUG  | It took 0.44 seconds for the variable to change</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.531 | INFO   | Test case TestWaitFor.test_wait_for_function: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.531 | INFO   | Test suite TestWaitFor: 2 of 2 test cases passed (100.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.531 | INFO   | Test suite TestWaitFor: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_14_TestFailIfNoException" onclick="show_log('14_TestFailIfNoException')">&plus;</span> TestFailIfNoException: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_14_TestFailIfNoException">
+<div class="log info"><pre>2024-09-24 15:10:06.535 | INFO   | Run test suite: TestFailIfNoException</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.535 | INFO   | Run test case: TestFailIfNoException.test_fail_if</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:06.535 | ERROR  | This should not generate an exception, but should fail</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:06.535 | ERROR  | Test case TestFailIfNoException.test_fail_if: FAILED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.535 | INFO   | Test suite TestFailIfNoException: 0 of 1 test cases passed (0.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.535 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.535 | INFO   | Test suite TestFailIfNoException: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_15_TestFailIfWithException" onclick="show_log('15_TestFailIfWithException')">&plus;</span> TestFailIfWithException: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_15_TestFailIfWithException">
+<div class="log info"><pre>2024-09-24 15:10:06.536 | INFO   | Run test suite: TestFailIfWithException</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.536 | INFO   | Run test case: TestFailIfWithException.test_fail_if</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:06.537 | ERROR  | This should generate an exception</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:06.537 | ERROR  | Test case TestFailIfWithException.test_fail_if: FAILED by exception</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:06.537 | ERROR  | Exception: This should generate an exception</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.537 | INFO   | Test suite TestFailIfWithException: 0 of 1 test cases passed (0.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.537 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.537 | INFO   | Test suite TestFailIfWithException: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_16_TestFailNoException" onclick="show_log('16_TestFailNoException')">&plus;</span> TestFailNoException: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_16_TestFailNoException">
+<div class="log info"><pre>2024-09-24 15:10:06.538 | INFO   | Run test suite: TestFailNoException</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.538 | INFO   | Run test case: TestFailNoException.test_fail</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:06.538 | ERROR  | This should not generate an exception, but should fail</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:06.538 | ERROR  | Test case TestFailNoException.test_fail: FAILED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.538 | INFO   | Test suite TestFailNoException: 0 of 1 test cases passed (0.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.538 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.538 | INFO   | Test suite TestFailNoException: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_17_TestFailWithException" onclick="show_log('17_TestFailWithException')">&plus;</span> TestFailWithException: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_17_TestFailWithException">
+<div class="log info"><pre>2024-09-24 15:10:06.538 | INFO   | Run test suite: TestFailWithException</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.538 | INFO   | Run test case: TestFailWithException.test_fail</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:06.538 | ERROR  | This should generate an exception</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:06.538 | ERROR  | Test case TestFailWithException.test_fail: FAILED by exception</pre></div>
+<div class="log error"><pre>2024-09-24 15:10:06.538 | ERROR  | Exception: This should generate an exception</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.538 | INFO   | Test suite TestFailWithException: 0 of 1 test cases passed (0.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.538 | INFO   | Test suite failed, but accepted because classification is set to &#x27;FAIL&#x27;</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.538 | INFO   | Test suite TestFailWithException: PASSED</pre></div>
+</div><div class="test-suite passed"><span class="expand" title="Show/hide log messages" id="button_18_TestEnvironmentCleanup" onclick="show_log('18_TestEnvironmentCleanup')">&plus;</span> TestEnvironmentCleanup: PASSED (0:00:00)</div>
+<div class="log-messages" style="display:none" id="log_18_TestEnvironmentCleanup">
+<div class="log info"><pre>2024-09-24 15:10:06.540 | INFO   | Run test suite: TestEnvironmentCleanup</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.540 | INFO   | Run test case: TestEnvironmentCleanup.test_setup_cleanup</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.540 | INFO   | Clean up test environment, nothing to cleanup for now...</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.540 | INFO   | Test case TestEnvironmentCleanup.test_setup_cleanup: PASSED</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.540 | INFO   | Test suite TestEnvironmentCleanup: 1 of 1 test cases passed (100.0%)</pre></div>
+<div class="log info"><pre>2024-09-24 15:10:06.540 | INFO   | Test suite TestEnvironmentCleanup: PASSED</pre></div>
+</div>
+</div>
+
+<p>&nbsp;</p>
+</body>
+</html>
