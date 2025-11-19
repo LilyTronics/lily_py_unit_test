@@ -96,6 +96,16 @@ div.log {
 .stderr {
     background-color: #f90;
 }
+
+@media print {
+    body {
+        font-size: 12px;
+    }
+    div.log-messages {
+        display: block !important;
+        font-size: 0.8em;
+    }
+}
 </style>
 <script>
 'use strict';
@@ -140,3 +150,4 @@ $test_suites_results
 <p>&nbsp;</p>
 </body>
 </html>
+
