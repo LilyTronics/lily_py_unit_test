@@ -1,5 +1,8 @@
 This file contains all the release notes
 
+* 20260331: V1.10.0
+  * Only Python 3.12 was properly supported. Now version from Python 3.10 are supported.
+
 * 202301: V1.9.0
   * fixed a bug in log messages (really fixed now).
   * test suite fails when using fail methods without raising an exception.
